@@ -1,0 +1,500 @@
+{
+    "id": "15dac026-4ba1-42fa-9b80-e2d5adfa8056",
+    "sceneType": "SCENE",
+    "settings": {
+        "snapEnabled": true,
+        "exportClass": true,
+        "autoImport": true,
+        "displayName": "MainGameScene",
+        "preloadPackFiles": [
+            "RPG2/public/assets/preload-asset-pack.json"
+        ],
+        "createMethodName": "editorCreate",
+        "sceneKey": "MainGameScene",
+        "compilerOutputLanguage": "TYPE_SCRIPT",
+        "borderWidth": 1280,
+        "borderHeight": 720
+    },
+    "displayList": [
+        {
+            "type": "TilemapLayer",
+            "id": "62a29ee5-0447-4bee-9d69-395ca60b385e",
+            "label": "grass_1",
+            "tilemapId": "38ef36bc-4d42-40d5-a365-608aebe8e8dc",
+            "layerName": "Grass",
+            "tilesets": [
+                "Tilemap_Flat",
+                "Tilemap_Elevation",
+                "Shadows",
+                "Bridge_All",
+                "Water",
+                "Rocks_02",
+                "Rocks_01",
+                "Foam",
+                "Tree",
+                "house 1",
+                "house 2",
+                "house 8",
+                "town hall",
+                "Trees 2"
+            ]
+        },
+        {
+            "type": "TilemapLayer",
+            "id": "721f9325-4932-450a-a3a6-6f79a5c60970",
+            "label": "water_1",
+            "tilemapId": "b81bd37e-5702-437c-a68e-3c6a9da4808b",
+            "layerName": "Water",
+            "tilesets": [
+                "Tilemap_Flat",
+                "Tilemap_Elevation",
+                "Shadows",
+                "Bridge_All",
+                "Water",
+                "Rocks_02",
+                "Rocks_01",
+                "Foam",
+                "Tree",
+                "house 1",
+                "house 2",
+                "house 8",
+                "town hall",
+                "Trees 2"
+            ]
+        },
+        {
+            "type": "TilemapLayer",
+            "id": "131dd606-d1db-4546-8c44-988158f91690",
+            "label": "rocks_1",
+            "displayName": "RocksLayer",
+            "scope": "CLASS",
+            "hitArea.shape": "POLYGON",
+            "hitArea.points": "0.797408475657424 156.09978128521334 153.3738001415179 153.88852923208492 156.3221362123558 126.6164205768345 285.3118393115132 122.93100048828714 288.99725940006056 95.65889183303672 398.8227780387718 91.2363877267799 404.71945018044755 61.753027018401056 510.8595487306114 61.753027018401056 521.178724978544 51.43385077046846 543.2912455098281 47.011346664211636 546.239581580666 12.368397831866499 570.5633541650785 13.105481849575972 577.1971103244638 1.3121375662244354 750.4118544861894 3.5233896193528484 754.0972745747368 28.58424622147486 876.3296268040887 31.590262254214547 880.7438910147168 59.547268921526125 960.2006468060234 62.49011172861155 1036.7145597902445 65.43295453569698 1047.0145096150436 90.44711839592313 1129.4141082134356 99.27564681717942 1136.7712152311492 118.40412506323472 1280.9705127783352 125.76123208094829 1279.8144338964146 -3.3226159573590612 -0.2932203623749966 -5.98396243190956",
+            "tilemapId": "32db5c27-3bf8-47a5-b9ff-69fd23ba7108",
+            "layerName": "Rocks",
+            "tilesets": [
+                "Tilemap_Flat",
+                "Tilemap_Elevation",
+                "Shadows",
+                "Bridge_All",
+                "Water",
+                "Rocks_02",
+                "Rocks_01",
+                "Foam",
+                "Tree",
+                "house 1",
+                "house 2",
+                "house 8",
+                "town hall",
+                "Trees 2"
+            ]
+        },
+        {
+            "type": "TilemapLayer",
+            "id": "d865389e-bba0-49b6-9d4d-1452cde8f133",
+            "label": "buildings_1",
+            "displayName": "BuildingsLayer",
+            "scope": "CLASS",
+            "tilemapId": "cec7a507-9c2a-4877-aa09-d8c28031a75f",
+            "layerName": "Buildings",
+            "tilesets": [
+                "Tilemap_Flat",
+                "Tilemap_Elevation",
+                "Shadows",
+                "Bridge_All",
+                "Water",
+                "Rocks_02",
+                "Rocks_01",
+                "Foam",
+                "Tree",
+                "house 1",
+                "house 2",
+                "house 8",
+                "town hall",
+                "Trees 2"
+            ]
+        },
+        {
+            "type": "TilemapLayer",
+            "id": "54f060e7-f469-4cb6-ae4f-c654ea73dcd2",
+            "label": "roofs_1",
+            "tilemapId": "26266f96-3c71-446c-80dd-b83edddc5b20",
+            "layerName": "Roofs",
+            "tilesets": [
+                "Tilemap_Flat",
+                "Tilemap_Elevation",
+                "Shadows",
+                "Bridge_All",
+                "Water",
+                "Rocks_02",
+                "Rocks_01",
+                "Foam",
+                "Tree",
+                "house 1",
+                "house 2",
+                "house 8",
+                "town hall",
+                "Trees 2"
+            ]
+        },
+        {
+            "type": "Rectangle",
+            "id": "15f91279-bd7e-476e-8bcb-650c6bb316c0",
+            "label": "rectangle_1",
+            "x": 640,
+            "y": 720,
+            "scaleX": 10.3,
+            "scaleY": 0.4,
+            "isFilled": true,
+            "fillColor": "#2e261a",
+            "width": 128,
+            "height": 128
+        },
+        {
+            "type": "Text",
+            "id": "5f65829e-1ce1-4760-aaab-8fbca78cbfa4",
+            "label": "text_1",
+            "x": 928,
+            "y": 560,
+            "text": "SHADOWTIDE\nISLAND",
+            "align": "right",
+            "fontSize": "54px",
+            "fontStyle": "bold",
+            "color": "#ceba96ff",
+            "stroke": "#000000ff",
+            "strokeThickness": 5,
+            "shadow.offsetX": 13,
+            "shadow.offsetY": 8,
+            "shadow.fill": true,
+            "shadow.blur": 5
+        }
+    ],
+    "plainObjects": [
+        {
+            "id": "38ef36bc-4d42-40d5-a365-608aebe8e8dc",
+            "type": "Tilemap",
+            "label": "grass_town_1_16",
+            "key": "grass_town_1_16",
+            "tilesets": [
+                {
+                    "name": "Tilemap_Flat",
+                    "imageKey": "Tilemap_Flat"
+                },
+                {
+                    "name": "Tilemap_Elevation",
+                    "imageKey": "Tilemap_Elevation"
+                },
+                {
+                    "name": "Shadows",
+                    "imageKey": "Shadows"
+                },
+                {
+                    "name": "Bridge_All",
+                    "imageKey": "Bridge_All"
+                },
+                {
+                    "name": "Water",
+                    "imageKey": "Water"
+                },
+                {
+                    "name": "Rocks_02",
+                    "imageKey": "Rocks_02"
+                },
+                {
+                    "name": "Rocks_01",
+                    "imageKey": "Rocks_01"
+                },
+                {
+                    "name": "Foam",
+                    "imageKey": "Foam"
+                },
+                {
+                    "name": "Tree",
+                    "imageKey": "Tree"
+                },
+                {
+                    "name": "house 1",
+                    "imageKey": "house 1"
+                },
+                {
+                    "name": "house 2",
+                    "imageKey": "house 2"
+                },
+                {
+                    "name": "house 8",
+                    "imageKey": "house 8"
+                },
+                {
+                    "name": "town hall",
+                    "imageKey": "town hall"
+                },
+                {
+                    "name": "Trees 2",
+                    "imageKey": "Trees"
+                }
+            ]
+        },
+        {
+            "id": "b81bd37e-5702-437c-a68e-3c6a9da4808b",
+            "type": "Tilemap",
+            "label": "grass_town",
+            "key": "grass_town_1_16",
+            "tilesets": [
+                {
+                    "name": "Tilemap_Flat",
+                    "imageKey": "Tilemap_Flat"
+                },
+                {
+                    "name": "Tilemap_Elevation",
+                    "imageKey": "Tilemap_Elevation"
+                },
+                {
+                    "name": "Shadows",
+                    "imageKey": "Shadows"
+                },
+                {
+                    "name": "Bridge_All",
+                    "imageKey": "Bridge_All"
+                },
+                {
+                    "name": "Water",
+                    "imageKey": "Water"
+                },
+                {
+                    "name": "Rocks_02",
+                    "imageKey": "Rocks_02"
+                },
+                {
+                    "name": "Rocks_01",
+                    "imageKey": "Rocks_01"
+                },
+                {
+                    "name": "Foam",
+                    "imageKey": "Foam"
+                },
+                {
+                    "name": "Tree",
+                    "imageKey": "Tree"
+                },
+                {
+                    "name": "house 1",
+                    "imageKey": "house 1"
+                },
+                {
+                    "name": "house 2",
+                    "imageKey": "house 2"
+                },
+                {
+                    "name": "house 8",
+                    "imageKey": "house 8"
+                },
+                {
+                    "name": "town hall",
+                    "imageKey": "town hall"
+                },
+                {
+                    "name": "Trees 2",
+                    "imageKey": "Trees"
+                }
+            ]
+        },
+        {
+            "id": "32db5c27-3bf8-47a5-b9ff-69fd23ba7108",
+            "type": "Tilemap",
+            "label": "grass_town_1",
+            "key": "grass_town_1_16",
+            "tilesets": [
+                {
+                    "name": "Tilemap_Flat",
+                    "imageKey": "Tilemap_Flat"
+                },
+                {
+                    "name": "Tilemap_Elevation",
+                    "imageKey": "Tilemap_Elevation"
+                },
+                {
+                    "name": "Shadows",
+                    "imageKey": "Shadows"
+                },
+                {
+                    "name": "Bridge_All",
+                    "imageKey": "Bridge_All"
+                },
+                {
+                    "name": "Water",
+                    "imageKey": "Water"
+                },
+                {
+                    "name": "Rocks_02",
+                    "imageKey": "Rocks_02"
+                },
+                {
+                    "name": "Rocks_01",
+                    "imageKey": "Rocks_01"
+                },
+                {
+                    "name": "Foam",
+                    "imageKey": "Foam"
+                },
+                {
+                    "name": "Tree",
+                    "imageKey": "Tree"
+                },
+                {
+                    "name": "house 1",
+                    "imageKey": "house 1"
+                },
+                {
+                    "name": "house 2",
+                    "imageKey": "house 2"
+                },
+                {
+                    "name": "house 8",
+                    "imageKey": "house 8"
+                },
+                {
+                    "name": "town hall",
+                    "imageKey": "town hall"
+                },
+                {
+                    "name": "Trees 2",
+                    "imageKey": "Trees"
+                }
+            ]
+        },
+        {
+            "id": "cec7a507-9c2a-4877-aa09-d8c28031a75f",
+            "type": "Tilemap",
+            "label": "grass_town_2",
+            "key": "grass_town_1_16",
+            "tilesets": [
+                {
+                    "name": "Tilemap_Flat",
+                    "imageKey": "Tilemap_Flat"
+                },
+                {
+                    "name": "Tilemap_Elevation",
+                    "imageKey": "Tilemap_Elevation"
+                },
+                {
+                    "name": "Shadows",
+                    "imageKey": "Shadows"
+                },
+                {
+                    "name": "Bridge_All",
+                    "imageKey": "Bridge_All"
+                },
+                {
+                    "name": "Water",
+                    "imageKey": "Water"
+                },
+                {
+                    "name": "Rocks_02",
+                    "imageKey": "Rocks_02"
+                },
+                {
+                    "name": "Rocks_01",
+                    "imageKey": "Rocks_01"
+                },
+                {
+                    "name": "Foam",
+                    "imageKey": "Foam"
+                },
+                {
+                    "name": "Tree",
+                    "imageKey": "Tree"
+                },
+                {
+                    "name": "house 1",
+                    "imageKey": "house 1"
+                },
+                {
+                    "name": "house 2",
+                    "imageKey": "house 2"
+                },
+                {
+                    "name": "house 8",
+                    "imageKey": "house 8"
+                },
+                {
+                    "name": "town hall",
+                    "imageKey": "town hall"
+                },
+                {
+                    "name": "Trees 2",
+                    "imageKey": "Trees"
+                }
+            ]
+        },
+        {
+            "id": "26266f96-3c71-446c-80dd-b83edddc5b20",
+            "type": "Tilemap",
+            "label": "grass_town_3",
+            "key": "grass_town_1_16",
+            "tilesets": [
+                {
+                    "name": "Tilemap_Flat",
+                    "imageKey": "Tilemap_Flat"
+                },
+                {
+                    "name": "Tilemap_Elevation",
+                    "imageKey": "Tilemap_Elevation"
+                },
+                {
+                    "name": "Shadows",
+                    "imageKey": "Shadows"
+                },
+                {
+                    "name": "Bridge_All",
+                    "imageKey": "Bridge_All"
+                },
+                {
+                    "name": "Water",
+                    "imageKey": "Water"
+                },
+                {
+                    "name": "Rocks_02",
+                    "imageKey": "Rocks_02"
+                },
+                {
+                    "name": "Rocks_01",
+                    "imageKey": "Rocks_01"
+                },
+                {
+                    "name": "Foam",
+                    "imageKey": "Foam"
+                },
+                {
+                    "name": "Tree",
+                    "imageKey": "Tree"
+                },
+                {
+                    "name": "house 1",
+                    "imageKey": "house 1"
+                },
+                {
+                    "name": "house 2",
+                    "imageKey": "house 2"
+                },
+                {
+                    "name": "house 8",
+                    "imageKey": "house 8"
+                },
+                {
+                    "name": "town hall",
+                    "imageKey": "town hall"
+                },
+                {
+                    "name": "Trees 2",
+                    "imageKey": "Trees"
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "app": "Phaser Editor - Scene Editor",
+        "url": "https://phaser.io/editor",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    }
+}
