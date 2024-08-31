@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 /* START-USER-IMPORTS */
-import { createAnimations } from "../animations";
+import  { Player, PlayerState }  from "../game_scripts/player";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
@@ -164,15 +164,30 @@ export default class MainGameScene extends Phaser.Scene {
     });
 
     // player
-    const player = this.physics.add.sprite(272, 182, "Warrior_Blue", 0);
-    player.scaleX = 0.5;
-    player.scaleY = 0.5;
-    player.tintTopLeft = 11935776;
-    player.body.setSize(128, 128, false);
+    // const player = this.physics.add.sprite(272, 182, "Warrior_Blue", 0);
+    // player.scaleX = 0.5;
+    // player.scaleY = 0.5;
+    // player.tintTopLeft = 11935776;
+    // player.body.setSize(128, 128, false);
 
+    this.player = new Player(this, 400, 300, "Warrior_Blue");
+
+    // Set up input for player movement
+    if (this.input && this.input.keyboard) {
+      this.input.keyboard.on("keydown-W", () => this.player.moveUp(100));
+      this.input.keyboard.on("keydown-S", () => this.player.moveDown(100));
+      this.input.keyboard.on("keydown-A", () => this.player.moveLeft(100));
+      this.input.keyboard.on("keydown-D", () => this.player.moveRight(100));
+      this.input.keyboard.on("keyup-W", () => this.player.stopMoving());
+      this.input.keyboard.on("keyup-S", () => this.player.stopMoving());
+      this.input.keyboard.on("keyup-A", () => this.player.stopMoving());
+      this.input.keyboard.on("keyup-D", () => this.player.stopMoving());
+
+      // Set up input for player attack
+      this.input.on("pointerdown", () => this.player.attack());
+    }
     this.rocks_1 = rocks_1;
     this.buildings_1 = buildings_1;
-    this.player = player;
     this.grass_town_1_16 = grass_town_1_16;
     this.grass_town = grass_town;
     this.grass_town_1 = grass_town_1;
@@ -184,7 +199,7 @@ export default class MainGameScene extends Phaser.Scene {
 
   private rocks_1!: Phaser.Tilemaps.TilemapLayer;
   private buildings_1!: Phaser.Tilemaps.TilemapLayer;
-  private player!: Phaser.Physics.Arcade.Sprite;
+  private player!: Player;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
   private wasdKeys!: {
@@ -219,12 +234,8 @@ export default class MainGameScene extends Phaser.Scene {
       faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Colliding edges will be rendered in this color
     });
 
-    // Add the animations to the player sprite
-    createAnimations(this);
-    this.player.play("idle");
-
     // CAMERA
-    this.cameras.main.setBounds(0, 0, 1920, 1080);
+    this.cameras.main.setBounds(0, 0, 3840, 2160);
     this.cameras.main.startFollow(this.player);
 
     // INPUT
@@ -262,26 +273,49 @@ export default class MainGameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    // Update camera controls
     if (this.controls) {
       this.controls.update(delta);
     }
 
-    const speedModifier = 1;
-    if (this.wasdKeys.W.isDown) {
-      this.player.setVelocityY(-100 * speedModifier); // Move up
-    } else if (this.wasdKeys.S.isDown) {
-      this.player.setVelocityY(100 * speedModifier); // Move down
-    } else {
-      this.player.setVelocityY(0);
-    }
+    // Update the player
+    this.player.update(time, delta);
 
-    if (this.wasdKeys.A.isDown) {
-      this.player.setVelocityX(-100 * speedModifier); // Move left
-    } else if (this.wasdKeys.D.isDown) {
-      this.player.setVelocityX(100 * speedModifier); // Move right
-    } else {
-      this.player.setVelocityX(0);
+    // Only handle movement if the player is not attacking
+    if (this.player.getCurrentState() !== PlayerState.ATTACKING) {
+      let moveX = 0;
+      let moveY = 0;
+      const speed = 100; // Adjust this value as needed
+
+      if (this.wasdKeys.W.isDown) {
+        moveY = -1;
+      } else if (this.wasdKeys.S.isDown) {
+        moveY = 1;
+      }
+
+      if (this.wasdKeys.A.isDown) {
+        moveX = -1;
+        this.player.setFlipX(true);
+      } else if (this.wasdKeys.D.isDown) {
+        moveX = 1;
+        this.player.setFlipX(false);
+      }
+
+      // Normalize diagonal movement
+      if (moveX !== 0 && moveY !== 0) {
+        moveX *= Math.SQRT1_2;
+        moveY *= Math.SQRT1_2;
+      }
+
+      // Update player state and movement
+      if (moveX !== 0 || moveY !== 0) {
+        this.player.setPlayerState(PlayerState.WALKING, {
+          velocityX: moveX * speed,
+          velocityY: moveY * speed,
+        });
+      } else {
+        this.player.stopMoving();
+      }
     }
   }
-  /* END-USER-CODE */
 }
