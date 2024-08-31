@@ -3,12 +3,21 @@
 /* START OF COMPILED CODE */
 
 import Phaser from "phaser";
+import { createAnimations } from "../animations";
 /* START-USER-IMPORTS */
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
   // ensure that the controls are initialized before they are used
-  private controls: Phaser.Cameras.Controls.SmoothedKeyControl;
+  private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
+  private player!: Phaser.GameObjects.Sprite;
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+  private wasdKeys!: {
+    W: Phaser.Input.Keyboard.Key;
+    A: Phaser.Input.Keyboard.Key;
+    S: Phaser.Input.Keyboard.Key;
+    D: Phaser.Input.Keyboard.Key;
+  };
 
   constructor() {
     super("MainGameScene");
@@ -173,12 +182,17 @@ export default class MainGameScene extends Phaser.Scene {
       "shadow.fill": true,
     });
 
-    // player
-    const player = this.add.tileSprite(279, 207, 190, 190, "Warrior_Blue", 0);
+    // Player
+    // Define the animations
+    createAnimations(this);
+    // Create the player sprite
+    this.player = this.add.sprite(100, 100, "Warrior_Blue", 0);
+    this.player.play("idle");
 
+    // setting the scene variables
     this.rocks_1 = rocks_1;
     this.buildings_1 = buildings_1;
-    this.player = player;
+
     this.grass_town_1_16 = grass_town_1_16;
     this.grass_town = grass_town;
     this.grass_town_1 = grass_town_1;
@@ -190,7 +204,6 @@ export default class MainGameScene extends Phaser.Scene {
 
   private rocks_1!: Phaser.Tilemaps.TilemapLayer;
   private buildings_1!: Phaser.Tilemaps.TilemapLayer;
-  private player!: Phaser.GameObjects.TileSprite;
   private grass_town_1_16!: Phaser.Tilemaps.Tilemap;
   private grass_town!: Phaser.Tilemaps.Tilemap;
   private grass_town_1!: Phaser.Tilemaps.Tilemap;
@@ -211,26 +224,54 @@ export default class MainGameScene extends Phaser.Scene {
       return;
     }
     //  Camera controls
-    const cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.createCursorKeys();
 
     const controlConfig = {
       camera: this.cameras.main,
-      left: cursors.left,
-      right: cursors.right,
-      up: cursors.up,
-      down: cursors.down,
+      left: this.cursors.left,
+      right: this.cursors.right,
+      up: this.cursors.up,
+      down: this.cursors.down,
       acceleration: 0.06,
       drag: 0.0005,
-      maxSpeed: 1.0,
+      maxSpeed: 0.5,
     };
-
+    // INPUT EVENTS
+    // Create a Smoothed Key Camera Control
     this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
       controlConfig
     );
+    // Give the player movement controls
+    this.wasdKeys = this.input.keyboard.addKeys({
+      W: Phaser.Input.Keyboard.KeyCodes.W,
+      A: Phaser.Input.Keyboard.KeyCodes.A,
+      S: Phaser.Input.Keyboard.KeyCodes.S,
+      D: Phaser.Input.Keyboard.KeyCodes.D,
+    }) as {
+      W: Phaser.Input.Keyboard.Key;
+      A: Phaser.Input.Keyboard.Key;
+      S: Phaser.Input.Keyboard.Key;
+      D: Phaser.Input.Keyboard.Key;
+    };
   }
+
   update(time: number, delta: number): void {
+    // Update camera controls
     if (this.controls) {
       this.controls.update(delta);
+    }
+
+    // Player movement controls with WASD
+    if (this.wasdKeys.W.isDown) {
+      this.player.y -= 2; // Move up
+    } else if (this.wasdKeys.S.isDown) {
+      this.player.y += 2; // Move down
+    }
+
+    if (this.wasdKeys.A.isDown) {
+      this.player.x -= 2; // Move left
+    } else if (this.wasdKeys.D.isDown) {
+      this.player.x += 2; // Move right
     }
   }
 }

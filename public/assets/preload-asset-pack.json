@@ -132,8 +132,8 @@
             {
                 "url": "assets/TinySwordsTilePack/Factions/Knights/Troops/Warrior/Blue/Warrior_Blue.png",
                 "frameConfig": {
-                    "frameWidth": 190,
-                    "frameHeight": 190,
+                    "frameWidth": 192,
+                    "frameHeight": 192,
                     "startFrame": 0,
                     "endFrame": -1,
                     "spacing": 0,
