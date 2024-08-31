@@ -1,11 +1,19 @@
+// You can write more code here
+
+/* START OF COMPILED CODE */
+
 import Phaser from "phaser";
 /* START-USER-IMPORTS */
-import  { Player, PlayerState }  from "../game_scripts/player";
+import { Player, PlayerState } from "../game_scripts/player";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
   constructor() {
     super("MainGameScene");
+
+    /* START-USER-CTR-CODE */
+    // Write your code here.
+    /* END-USER-CTR-CODE */
   }
 
   preload(): void {
@@ -163,29 +171,6 @@ export default class MainGameScene extends Phaser.Scene {
       "shadow.fill": true,
     });
 
-    // player
-    // const player = this.physics.add.sprite(272, 182, "Warrior_Blue", 0);
-    // player.scaleX = 0.5;
-    // player.scaleY = 0.5;
-    // player.tintTopLeft = 11935776;
-    // player.body.setSize(128, 128, false);
-
-    this.player = new Player(this, 400, 300, "Warrior_Blue");
-
-    // Set up input for player movement
-    if (this.input && this.input.keyboard) {
-      this.input.keyboard.on("keydown-W", () => this.player.moveUp(100));
-      this.input.keyboard.on("keydown-S", () => this.player.moveDown(100));
-      this.input.keyboard.on("keydown-A", () => this.player.moveLeft(100));
-      this.input.keyboard.on("keydown-D", () => this.player.moveRight(100));
-      this.input.keyboard.on("keyup-W", () => this.player.stopMoving());
-      this.input.keyboard.on("keyup-S", () => this.player.stopMoving());
-      this.input.keyboard.on("keyup-A", () => this.player.stopMoving());
-      this.input.keyboard.on("keyup-D", () => this.player.stopMoving());
-
-      // Set up input for player attack
-      this.input.on("pointerdown", () => this.player.attack());
-    }
     this.rocks_1 = rocks_1;
     this.buildings_1 = buildings_1;
     this.grass_town_1_16 = grass_town_1_16;
@@ -199,6 +184,13 @@ export default class MainGameScene extends Phaser.Scene {
 
   private rocks_1!: Phaser.Tilemaps.TilemapLayer;
   private buildings_1!: Phaser.Tilemaps.TilemapLayer;
+  private grass_town_1_16!: Phaser.Tilemaps.Tilemap;
+  private grass_town!: Phaser.Tilemaps.Tilemap;
+  private grass_town_1!: Phaser.Tilemaps.Tilemap;
+  private grass_town_2!: Phaser.Tilemaps.Tilemap;
+  private grass_town_3!: Phaser.Tilemaps.Tilemap;
+
+  /* START-USER-CODE */
   private player!: Player;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
@@ -208,16 +200,12 @@ export default class MainGameScene extends Phaser.Scene {
     S: Phaser.Input.Keyboard.Key;
     D: Phaser.Input.Keyboard.Key;
   };
-  private grass_town_1_16!: Phaser.Tilemaps.Tilemap;
-  private grass_town!: Phaser.Tilemaps.Tilemap;
-  private grass_town_1!: Phaser.Tilemaps.Tilemap;
-  private grass_town_2!: Phaser.Tilemaps.Tilemap;
-  private grass_town_3!: Phaser.Tilemaps.Tilemap;
-
-  /* START-USER-CODE */
 
   create() {
     this.editorCreate();
+
+    // PLAYER
+    this.player = new Player(this, 640, 640, "Warrior_Blue");
 
     // COLLISION SETTINGS
     // Enable collision for tiles with the 'collides' property in the 'rocks_1' layer
@@ -239,6 +227,8 @@ export default class MainGameScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
 
     // INPUT
+    this.input.on("pointerdown", () => this.player.attack());
+
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -319,3 +309,8 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 }
+/* END-USER-CODE */
+
+/* END OF COMPILED CODE */
+
+// You can write more code here

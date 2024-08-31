@@ -12,8 +12,8 @@
         "createMethodName": "editorCreate",
         "sceneKey": "MainGameScene",
         "compilerOutputLanguage": "TYPE_SCRIPT",
-        "borderWidth": 1280,
-        "borderHeight": 720
+        "borderWidth": 3840,
+        "borderHeight": 2160
     },
     "displayList": [
         {
@@ -167,25 +167,6 @@
             "shadow.offsetY": 8,
             "shadow.fill": true,
             "shadow.blur": 5
-        },
-        {
-            "type": "ArcadeSprite",
-            "id": "4d8aacfe-b339-4c23-882e-1172129fd05c",
-            "label": "player",
-            "displayName": "Player",
-            "scope": "CLASS",
-            "padding": 20,
-            "texture": {
-                "key": "Warrior_Blue",
-                "frame": 0
-            },
-            "x": 272,
-            "y": 182,
-            "scaleX": 0.5,
-            "scaleY": 0.5,
-            "tintTopLeft": "#e1c1c1",
-            "body.width": 128,
-            "body.height": 128
         }
     ],
     "plainObjects": [
