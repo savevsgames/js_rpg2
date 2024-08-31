@@ -133,6 +133,15 @@ export default class MainGameScene extends Phaser.Scene {
       ),
       Phaser.Geom.Polygon.Contains
     );
+    // Set the "collides" custom property to true for the rocks_1 object
+    rocks_1.setCollisionByProperty({ collides: true });
+    // Use debugging to test for collisions
+    const debugGraphics = this.add.graphics().setAlpha(0.75);
+    rocks_1.renderDebug(debugGraphics, {
+      tileColor: null, // Color of non-colliding tiles
+      collidingTileColor: new Phaser.Display.Color(180, 80, 80, 255), // Color of colliding tiles
+      faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
+    });
 
     // buildings_1
     const buildings_1 = grass_town_2.createLayer(

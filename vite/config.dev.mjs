@@ -1,17 +1,17 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-    base: './',
-    build: {
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    phaser: ['phaser']
-                }
-            }
+  base: "https://savevsgames.github.io/js_rpg2/",
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          phaser: ["phaser"],
         },
+      },
     },
-    server: {
-        port: 8080
-    }
+  },
+  server: {
+    port: 8080,
+  },
 });
