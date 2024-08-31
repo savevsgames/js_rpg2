@@ -169,18 +169,22 @@
             "shadow.blur": 5
         },
         {
-            "type": "TileSprite",
-            "id": "ede2fafb-adac-488a-a40b-cd096eaeaf7d",
+            "type": "ArcadeSprite",
+            "id": "4d8aacfe-b339-4c23-882e-1172129fd05c",
             "label": "player",
+            "displayName": "Player",
             "scope": "CLASS",
             "texture": {
                 "key": "Warrior_Blue",
                 "frame": 0
             },
-            "x": 279,
-            "y": 207,
-            "width": 190,
-            "height": 190
+            "x": 272,
+            "y": 182,
+            "scaleX": 0.5,
+            "scaleY": 0.5,
+            "tintTopLeft": "#b62020",
+            "body.width": 128,
+            "body.height": 128
         }
     ],
     "plainObjects": [
