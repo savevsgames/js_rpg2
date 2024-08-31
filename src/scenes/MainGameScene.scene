@@ -167,6 +167,20 @@
             "shadow.offsetY": 8,
             "shadow.fill": true,
             "shadow.blur": 5
+        },
+        {
+            "type": "TileSprite",
+            "id": "ede2fafb-adac-488a-a40b-cd096eaeaf7d",
+            "label": "player",
+            "scope": "CLASS",
+            "texture": {
+                "key": "Warrior_Blue",
+                "frame": 0
+            },
+            "x": 279,
+            "y": 207,
+            "width": 190,
+            "height": 190
         }
     ],
     "plainObjects": [

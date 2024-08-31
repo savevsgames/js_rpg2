@@ -7,8 +7,8 @@ import Phaser from "phaser";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
-  // Declare the controls property
-  private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
+  // ensure that the controls are initialized before they are used
+  private controls: Phaser.Cameras.Controls.SmoothedKeyControl;
 
   constructor() {
     super("MainGameScene");
@@ -133,15 +133,6 @@ export default class MainGameScene extends Phaser.Scene {
       ),
       Phaser.Geom.Polygon.Contains
     );
-    // Set the "collides" custom property to true for the rocks_1 object
-    rocks_1.setCollisionByProperty({ collides: true });
-    // Use debugging to test for collisions
-    const debugGraphics = this.add.graphics().setAlpha(0.75);
-    rocks_1.renderDebug(debugGraphics, {
-      tileColor: null, // Color of non-colliding tiles
-      collidingTileColor: new Phaser.Display.Color(180, 80, 80, 255), // Color of colliding tiles
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
-    });
 
     // buildings_1
     const buildings_1 = grass_town_2.createLayer(
@@ -182,8 +173,12 @@ export default class MainGameScene extends Phaser.Scene {
       "shadow.fill": true,
     });
 
+    // player
+    const player = this.add.tileSprite(279, 207, 190, 190, "Warrior_Blue", 0);
+
     this.rocks_1 = rocks_1;
     this.buildings_1 = buildings_1;
+    this.player = player;
     this.grass_town_1_16 = grass_town_1_16;
     this.grass_town = grass_town;
     this.grass_town_1 = grass_town_1;
@@ -195,6 +190,7 @@ export default class MainGameScene extends Phaser.Scene {
 
   private rocks_1!: Phaser.Tilemaps.TilemapLayer;
   private buildings_1!: Phaser.Tilemaps.TilemapLayer;
+  private player!: Phaser.GameObjects.TileSprite;
   private grass_town_1_16!: Phaser.Tilemaps.Tilemap;
   private grass_town!: Phaser.Tilemaps.Tilemap;
   private grass_town_1!: Phaser.Tilemaps.Tilemap;
@@ -232,12 +228,9 @@ export default class MainGameScene extends Phaser.Scene {
       controlConfig
     );
   }
-
-  /* END-USER-CODE */
-  update(time: number, delta: number) {
-    this.controls.update(delta);
+  update(time: number, delta: number): void {
+    if (this.controls) {
+      this.controls.update(delta);
+    }
   }
-
-  /* END OF COMPILED CODE */
 }
-// You can write more code here

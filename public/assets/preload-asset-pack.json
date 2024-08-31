@@ -132,8 +132,8 @@
             {
                 "url": "assets/TinySwordsTilePack/Factions/Knights/Troops/Warrior/Blue/Warrior_Blue.png",
                 "frameConfig": {
-                    "frameWidth": 32,
-                    "frameHeight": 32,
+                    "frameWidth": 190,
+                    "frameHeight": 190,
                     "startFrame": 0,
                     "endFrame": -1,
                     "spacing": 0,
@@ -141,6 +141,11 @@
                 },
                 "type": "spritesheet",
                 "key": "Warrior_Blue"
+            },
+            {
+                "url": "assets/TinySwordsTilePack/Factions/Knights/Troops/Warrior/Blue/Warrior_Blue.aseprite",
+                "type": "binary",
+                "key": "Warrior_Blue_1"
             },
             {
                 "url": "assets/TinySwordsTilePack/Terrain/Water/Water.png",
