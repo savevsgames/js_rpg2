@@ -203,24 +203,26 @@ export default class MainGameScene extends Phaser.Scene {
 
   create() {
     this.editorCreate();
+    // Set the world bounds to the size of the camera bounds
+    this.physics.world.setBounds(0, 0, 3840, 2160);
 
     // PLAYER
     this.player = new Player(this, 640, 640, "Warrior_Blue");
-
+    // Set the player to collide with the world bounds
+    this.player.setCollideWorldBounds(true);
     // COLLISION SETTINGS
     // Enable collision for tiles with the 'collides' property in the 'rocks_1' layer
     this.rocks_1.setCollisionByProperty({ collides: true });
 
     // Add a collider between the player and the collidable tiles in the 'rocks_1' layer
     this.physics.add.collider(this.player, this.rocks_1);
-
     // DEBUG: Render the collidable tiles in the 'rocks_1' layer
-    const debugGraphics = this.add.graphics();
-    this.rocks_1.renderDebug(debugGraphics, {
-      tileColor: null, // Non-colliding tiles will not be rendered
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 200), // Colliding tiles will be rendered in this color
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Colliding edges will be rendered in this color
-    });
+    // const debugGraphics = this.add.graphics();
+    // this.rocks_1.renderDebug(debugGraphics, {
+    //   tileColor: null, // Non-colliding tiles will not be rendered
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 200), // Colliding tiles will be rendered in this color
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Colliding edges will be rendered in this color
+    // });
 
     // CAMERA
     this.cameras.main.setBounds(0, 0, 3840, 2160);
@@ -275,7 +277,7 @@ export default class MainGameScene extends Phaser.Scene {
     if (this.player.getCurrentState() !== PlayerState.ATTACKING) {
       let moveX = 0;
       let moveY = 0;
-      const speed = 100; // Adjust this value as needed
+      const speed = 500; // Adjust this value as needed
 
       if (this.wasdKeys.W.isDown) {
         moveY = -1;
