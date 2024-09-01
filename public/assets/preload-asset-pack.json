@@ -90,6 +90,11 @@
                 "key": "mapgrass1"
             },
             {
+                "url": "assets/MineEntranceTestMap.jpg",
+                "type": "image",
+                "key": "MineEntranceTestMap"
+            },
+            {
                 "url": "assets/TinySwordsTilePack/Terrain/Water/Rocks/Rocks_01.png",
                 "type": "image",
                 "key": "Rocks_01"

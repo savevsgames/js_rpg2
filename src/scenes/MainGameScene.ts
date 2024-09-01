@@ -293,12 +293,20 @@ export default class MainGameScene extends Phaser.Scene {
         "Your adventure begins here...",
         "Explore the mysteries that await you.",
       ],
+      style: {
+        fontSize: "40px",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        textColor: "yellow",
+        padding: "30px",
+        borderRadius: "15px",
+        fontFamily: "Georgia, serif",
+      },
+      revealSpeed: 50,
       onComplete: () => {
         console.log("Story completed!");
         // Add any logic you want to run after the story is complete
       },
     };
-
     this.storyBox = new StoryBox(this, storyConfig);
     this.storyBox.create();
   }
