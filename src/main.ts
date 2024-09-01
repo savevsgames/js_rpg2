@@ -28,6 +28,9 @@ window.addEventListener("load", function () {
       autoCenter: Phaser.Scale.Center.CENTER_BOTH,
     },
     scene: [Boot, Preload, Level, MainGameScene],
+    dom: {
+      createContainer: true,
+    },
     physics: {
       default: "arcade",
       arcade: {

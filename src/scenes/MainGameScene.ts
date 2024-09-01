@@ -6,6 +6,9 @@ import Phaser from "phaser";
 /* START-USER-IMPORTS */
 import { Player, PlayerState } from "../game_scripts/player";
 import Grid from "../game_scripts/utils/grid";
+import utils from "../game_scripts/utils/utils";
+import StoryBox from "../game_scripts/StoryBox";
+import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
@@ -203,6 +206,7 @@ export default class MainGameScene extends Phaser.Scene {
     D: Phaser.Input.Keyboard.Key;
   };
   private grid: Grid | null;
+  private storyBox: StoryBox | null = null;
 
   create() {
     this.editorCreate();
@@ -210,7 +214,12 @@ export default class MainGameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, 3840, 2160);
 
     // PLAYER
-    this.player = new Player(this, 640, 640, "Warrior_Blue");
+    this.player = new Player(
+      this,
+      utils.withGrid(5),
+      utils.withGrid(5),
+      "Warrior_Blue"
+    );
     // Set the player to collide with the world bounds
     this.player.setCollideWorldBounds(true);
     // COLLISION SETTINGS
@@ -276,14 +285,32 @@ export default class MainGameScene extends Phaser.Scene {
     } else {
       console.error("Keyboard input system not initialized.");
     }
+
+    // Text Overlay - STORY BOX
+    const storyConfig: StoryBoxConfig = {
+      texts: [
+        "Welcome to Shadowtide Island!",
+        "Your adventure begins here...",
+        "Explore the mysteries that await you.",
+      ],
+      onComplete: () => {
+        console.log("Story completed!");
+        // Add any logic you want to run after the story is complete
+      },
+    };
+
+    this.storyBox = new StoryBox(this, storyConfig);
+    this.storyBox.create();
   }
+
+  // Update the camera bounds when the window is resized
   updateCameraBounds(x: number, y: number, width: number, height: number) {
     this.cameras.main.setBounds(x, y, width, height);
     if (this.grid) {
       this.grid.updateGrid();
     }
   }
-
+  // GAME UPDATE
   update(time: number, delta: number): void {
     // Update camera controls
     if (this.controls) {
@@ -292,6 +319,10 @@ export default class MainGameScene extends Phaser.Scene {
 
     if (this.grid) {
       this.grid.updateGrid();
+    }
+
+    if (this.storyBox) {
+      this.storyBox.update();
     }
 
     // Update the player
@@ -332,6 +363,12 @@ export default class MainGameScene extends Phaser.Scene {
       } else {
         this.player.stopMoving();
       }
+    }
+  }
+  shutdown() {
+    if (this.storyBox) {
+      this.storyBox.destroy();
+      this.storyBox = null;
     }
   }
 }
