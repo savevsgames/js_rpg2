@@ -5,6 +5,7 @@
 import Phaser from "phaser";
 /* START-USER-IMPORTS */
 import { Player, PlayerState } from "../game_scripts/player";
+import Grid from "../game_scripts/utils/grid";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
@@ -12,6 +13,7 @@ export default class MainGameScene extends Phaser.Scene {
     super("MainGameScene");
 
     /* START-USER-CTR-CODE */
+    this.grid = null;
     // Write your code here.
     /* END-USER-CTR-CODE */
   }
@@ -200,6 +202,7 @@ export default class MainGameScene extends Phaser.Scene {
     S: Phaser.Input.Keyboard.Key;
     D: Phaser.Input.Keyboard.Key;
   };
+  private grid: Grid | null;
 
   create() {
     this.editorCreate();
@@ -226,7 +229,18 @@ export default class MainGameScene extends Phaser.Scene {
 
     // CAMERA
     this.cameras.main.setBounds(0, 0, 3840, 2160);
-    this.cameras.main.startFollow(this.player);
+    // this.cameras.main.startFollow(this.player);
+
+    // Create the grid with default 32px cell size
+    this.grid = new Grid(this);
+
+    // Add a key to toggle the grid
+    if (this.input.keyboard) {
+      this.input.keyboard.on("keydown-G", () => {
+        if (!this.grid) return;
+        this.grid.toggle();
+      });
+    }
 
     // INPUT
     this.input.on("pointerdown", () => this.player.attack());
@@ -263,11 +277,21 @@ export default class MainGameScene extends Phaser.Scene {
       console.error("Keyboard input system not initialized.");
     }
   }
+  updateCameraBounds(x: number, y: number, width: number, height: number) {
+    this.cameras.main.setBounds(x, y, width, height);
+    if (this.grid) {
+      this.grid.updateGrid();
+    }
+  }
 
   update(time: number, delta: number): void {
     // Update camera controls
     if (this.controls) {
       this.controls.update(delta);
+    }
+
+    if (this.grid) {
+      this.grid.updateGrid();
     }
 
     // Update the player
