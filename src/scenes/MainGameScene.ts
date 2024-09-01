@@ -111,6 +111,9 @@ export default class MainGameScene extends Phaser.Scene {
     grass_town_3.addTilesetImage("town hall", "town hall");
     grass_town_3.addTilesetImage("Trees 2", "Trees");
 
+    // mineEntranceTestMap
+    this.add.image(1920, 1080, "MineEntranceTestMap");
+
     // grass_1
     grass_town_1_16.createLayer("Grass", ["Tilemap_Flat"], 0, 0);
 

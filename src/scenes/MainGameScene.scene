@@ -17,6 +17,16 @@
     },
     "displayList": [
         {
+            "type": "Image",
+            "id": "77848cc9-e541-4177-91cd-02ac64501ff2",
+            "label": "mineEntranceTestMap",
+            "texture": {
+                "key": "MineEntranceTestMap"
+            },
+            "x": 1920,
+            "y": 1080
+        },
+        {
             "type": "TilemapLayer",
             "id": "62a29ee5-0447-4bee-9d69-395ca60b385e",
             "label": "grass_1",
