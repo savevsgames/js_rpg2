@@ -229,7 +229,7 @@ export default class MainGameScene extends Phaser.Scene {
 
     // CAMERA
     this.cameras.main.setBounds(0, 0, 3840, 2160);
-    // this.cameras.main.startFollow(this.player);
+    this.cameras.main.startFollow(this.player);
 
     // Create the grid with default 32px cell size
     this.grid = new Grid(this);
