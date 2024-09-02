@@ -1,0 +1,31 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "test_castle_1.tmx#ShadowtideKeepEntranceMap_test_1": {
+            "scaleInEditor": 1.5
+        }
+    },
+    "last.imagePath": "C:/Users/gregc/Documents/js_dev/phaser_dev/RPG2/public/assets",
+    "map.height": 135,
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 240,
+    "openFiles": [
+    ],
+    "project": "ShadowtideAssets.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

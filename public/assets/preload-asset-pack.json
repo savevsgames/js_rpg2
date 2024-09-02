@@ -110,6 +110,21 @@
                 "key": "Shadows"
             },
             {
+                "url": "assets/ShadowtideKeepEntranceMap_test_1.jpg",
+                "type": "image",
+                "key": "ShadowtideKeepEntranceMap_test_1"
+            },
+            {
+                "url": "assets/test_castle_1.json",
+                "type": "tilemapTiledJSON",
+                "key": "test_castle"
+            },
+            {
+                "url": "assets/test_castle_1.tmx",
+                "type": "binary",
+                "key": "test_castle_1"
+            },
+            {
                 "url": "assets/TinySwordsTilePack/Terrain/Ground/Tilemap_Elevation.png",
                 "type": "image",
                 "key": "Tilemap_Elevation"
