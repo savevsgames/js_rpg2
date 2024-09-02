@@ -11,6 +11,7 @@ import StoryBox from "../game_scripts/StoryBox";
 import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 import { DirectionInput } from "../game_scripts/utils/DirectionInput";
 import { CollisionChecker } from "../game_scripts/utils/CollisionChecker";
+import * as inkjs from "inkjs";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
@@ -20,12 +21,16 @@ export default class MainGameScene extends Phaser.Scene {
     /* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
+
     // Write your code here.
     /* END-USER-CTR-CODE */
   }
 
   preload(): void {
     this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
+
+    // // Load the Ink story JSON
+    this.load.pack("chapter_1", "assets/chapter_1.ink.json");
   }
 
   editorCreate(): void {
@@ -81,6 +86,7 @@ export default class MainGameScene extends Phaser.Scene {
   private directionInput = new DirectionInput();
   private collisionChecker!: CollisionChecker;
   private debugGraphics!: Phaser.GameObjects.Graphics;
+  private jsonData: any;
 
   create() {
     this.editorCreate();
@@ -99,6 +105,7 @@ export default class MainGameScene extends Phaser.Scene {
 
     // Initialize the player
     this.player = new Player(this, 5, 5, "Warrior_Blue", 128, this.grid);
+    // this.player.scale = 0.5;
 
     // Set up DirectionInput for WASD
     this.directionInput.init();
@@ -117,13 +124,86 @@ export default class MainGameScene extends Phaser.Scene {
 
     this.input.on("pointerdown", () => this.player.attack());
 
+    let cache = this.cache.json;
+    var jsonData = cache.get("chapter_1");
+    console.log("Loading JSON:");
+    const inkStoryData = jsonData;
+    if (inkStoryData) {
+      console.log("Data successfully moved from cache.");
+    }
+    const inkStory = new inkjs.Story(inkStoryData);
+
+    //-------------------------------------------
+    // STORY BOX CONFIGURATION
+    // const storyConfig: StoryBoxConfig = {
+    //   texts: [
+    //     "Welcome to Shadowtide Island!",
+    //     "Your adventure begins here...",
+    //     "Explore the mysteries that await you.",
+    //   ],
+    //   style: {
+    //     fontSize: "40px",
+    //     backgroundColor: "rgba(0, 0, 0, 0.8)",
+    //     textColor: "yellow",
+    //     padding: "30px",
+    //     borderRadius: "15px",
+    //     fontFamily: "Georgia, serif",
+    //   },
+    //   revealSpeed: 50,
+    //   onComplete: () => {
+    //     console.log("Story completed!");
+    //     // Add any logic you want to run after the story is complete
+    //   },
+    // };
+    // this.storyBox = new StoryBox(this, storyConfig);
+    // this.storyBox.create();
+
+    // STORY BOX CONFIGURATION using Ink content
+
+    this.displayInkContent(inkStory);
+
+    // Initialize Collision Checker
+    this.collisionChecker = new CollisionChecker(
+      this,
+      this.tile_Layer,
+      this.grid
+    );
+    this.player.updateOccupiedGrids();
+    this.visualizeOccupiedGrids(this.player.getOccupiedGrids(), 0x00ff00); // Current position in green
+    console.log("Occupied Grids:", this.player.getOccupiedGrids());
+  } // End of create method
+
+  /**
+   *
+   * @param inkStory
+   *
+   */
+  // Add the displayInkContent method inside your MainGameScene class
+  displayInkContent(inkStory: inkjs.Story): void {
+    let storyContent: (string | null)[] = [];
+
+    // Continue the story until there's no more content or a choice is reached
+    while (inkStory.canContinue) {
+      storyContent.push(inkStory.Continue());
+    }
+
+    // Handle choices if any
+    if (inkStory.currentChoices.length > 0) {
+      inkStory.currentChoices.forEach((choice, index) => {
+        storyContent.push(`${index + 1}: ${choice.text}`);
+      });
+    }
+
+    // Filter out any null values
+    const filteredStoryContent = storyContent.filter(
+      (text): text is string => text !== null
+    );
+
+    console.log("Story Content:", filteredStoryContent);
+
     // STORY BOX CONFIGURATION
     const storyConfig: StoryBoxConfig = {
-      texts: [
-        "Welcome to Shadowtide Island!",
-        "Your adventure begins here...",
-        "Explore the mysteries that await you.",
-      ],
+      texts: filteredStoryContent, // Now this is guaranteed to be a string[]
       style: {
         fontSize: "40px",
         backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -135,21 +215,11 @@ export default class MainGameScene extends Phaser.Scene {
       revealSpeed: 50,
       onComplete: () => {
         console.log("Story completed!");
-        // Add any logic you want to run after the story is complete
       },
     };
+
     this.storyBox = new StoryBox(this, storyConfig);
     this.storyBox.create();
-
-    // Initialize Collision Checker
-    this.collisionChecker = new CollisionChecker(
-      this,
-      this.tile_Layer,
-      this.grid
-    );
-    this.player.updateOccupiedGrids();
-    this.visualizeOccupiedGrids(this.player.getOccupiedGrids(), 0x00ff00); // Current position in green
-    console.log("Occupied Grids:", this.player.getOccupiedGrids());
   }
 
   update(time: number, delta: number): void {

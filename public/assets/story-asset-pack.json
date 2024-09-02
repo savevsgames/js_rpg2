@@ -1,0 +1,18 @@
+{
+    "section1": {
+        "files": [
+            {
+                "url": "/src/inky_json/chapter_1.ink.json",
+                "type": "json",
+                "key": "chapter_1.ink"
+            }
+        ]
+    },
+    "meta": {
+        "app": "Phaser Editor 2D - Asset Pack Editor",
+        "contentType": "phasereditor2d.pack.core.AssetContentType",
+        "url": "https://phasereditor2d.com",
+        "version": 2,
+        "showAllFilesInBlocks": false
+    }
+}
