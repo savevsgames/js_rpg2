@@ -27,24 +27,6 @@
             "y": 1080
         },
         {
-            "type": "Text",
-            "id": "5f65829e-1ce1-4760-aaab-8fbca78cbfa4",
-            "label": "text_1",
-            "x": 3453,
-            "y": 1984,
-            "text": "SHADOWTIDE\nISLAND",
-            "align": "right",
-            "fontSize": "54px",
-            "fontStyle": "bold",
-            "color": "#ceba96ff",
-            "stroke": "#000000ff",
-            "strokeThickness": 5,
-            "shadow.offsetX": 13,
-            "shadow.offsetY": 8,
-            "shadow.fill": true,
-            "shadow.blur": 5
-        },
-        {
             "type": "TilemapLayer",
             "id": "a1399b93-ca91-4bf1-9f65-ab80592205e3",
             "label": "tile_Layer",
@@ -54,6 +36,83 @@
             "tilesets": [
                 "ShadowtideKeepEntranceMap_test_1"
             ]
+        },
+        {
+            "type": "Image",
+            "id": "d7652b9c-3024-432a-91f8-74e5a5bd1be9",
+            "label": "mapgrass1",
+            "texture": {
+                "key": "mapgrass1"
+            },
+            "x": 1920,
+            "y": 1080,
+            "scaleX": 2,
+            "scaleY": 2
+        },
+        {
+            "type": "Image",
+            "id": "cbe5b0d4-c5ab-4389-9f8a-de8cf9042107",
+            "label": "fantasy_ship",
+            "texture": {
+                "key": "fantasy_ship"
+            },
+            "x": 1920,
+            "y": 1080
+        },
+        {
+            "type": "Text",
+            "id": "5f65829e-1ce1-4760-aaab-8fbca78cbfa4",
+            "label": "text_1",
+            "x": 64,
+            "y": 64,
+            "text": "SHADOWTIDE\nISLAND",
+            "fontSize": "185px",
+            "fontStyle": "bold",
+            "color": "#ceba96ff",
+            "stroke": "#000000ff",
+            "strokeThickness": 10,
+            "shadow.offsetX": 13,
+            "shadow.offsetY": 8,
+            "shadow.fill": true,
+            "shadow.blur": 5
+        },
+        {
+            "type": "Rectangle",
+            "id": "6a04d9d6-f79b-44e9-a2a5-c2ae4885cdc7",
+            "label": "rectangle_1",
+            "scope": "CLASS",
+            "x": 528,
+            "y": 1296,
+            "scaleX": 6.9,
+            "scaleY": 12.1,
+            "isFilled": true,
+            "fillAlpha": 0.38,
+            "strokeColor": "#000000",
+            "strokeAlpha": 0.42,
+            "lineWidth": 6.65,
+            "isStroked": true,
+            "width": 128,
+            "height": 128,
+            "list": [
+                {
+                    "type": "Shadow",
+                    "id": "b4e6cb31-4151-479e-abab-5b8bcd039578",
+                    "label": "shadowFx"
+                }
+            ]
+        },
+        {
+            "type": "Text",
+            "id": "62fb0b29-6821-4230-ac73-260f0616bd4b",
+            "label": "text_2",
+            "x": 144,
+            "y": 640,
+            "text": "Use the arrow keys to move the camera. \n\nSelect a token to move with W,A,S,D\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.",
+            "fontSize": "72px",
+            "fontStyle": "bold",
+            "color": "#000000ff",
+            "maxLines": 23,
+            "wordWrapWidth": 789
         }
     ],
     "plainObjects": [

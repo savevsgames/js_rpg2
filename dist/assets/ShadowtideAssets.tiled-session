@@ -3,10 +3,22 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "test_castle_1.json",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "test_castle_1.json": {
+            "scale": 0.21102864583333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1921.5400752761152,
+                "y": 1080.4220398593202
+            }
+        },
+        "test_castle_1.json#ShadowtideKeepEntranceMap_test_1": {
+            "scaleInDock": 0.75
+        },
         "test_castle_1.tmx#ShadowtideKeepEntranceMap_test_1": {
             "scaleInEditor": 1.5
         }
@@ -18,10 +30,12 @@
     "map.tileWidth": 16,
     "map.width": 240,
     "openFiles": [
+        "test_castle_1.json"
     ],
     "project": "ShadowtideAssets.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "test_castle_1.json"
     ],
     "tileset.embedInMap": true,
     "tileset.tileSize": {
