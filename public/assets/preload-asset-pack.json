@@ -12,6 +12,11 @@
                 "key": "Bridge_All"
             },
             {
+                "url": "assets/story_files/chapter_1.ink.json",
+                "type": "json",
+                "key": "chapter_1.ink"
+            },
+            {
                 "url": "assets/char_1_spritesheet.png",
                 "frameConfig": {
                     "frameWidth": 32,
@@ -23,6 +28,11 @@
                 },
                 "type": "spritesheet",
                 "key": "char_1_spritesheet"
+            },
+            {
+                "url": "assets/fantasy_ship.jpg",
+                "type": "image",
+                "key": "fantasy_ship"
             },
             {
                 "url": "assets/TinySwordsTilePack/Terrain/Water/Foam/Foam.png",
@@ -123,6 +133,13 @@
                 "url": "assets/test_castle_1.tmx",
                 "type": "binary",
                 "key": "test_castle_1"
+            },
+            {
+                "url": [
+                    "assets/music/The_Journey_Begins_110bpm_120s.mp3"
+                ],
+                "type": "audio",
+                "key": "The_Journey_Begins_110bpm_120s"
             },
             {
                 "url": "assets/TinySwordsTilePack/Terrain/Ground/Tilemap_Elevation.png",

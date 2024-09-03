@@ -28,6 +28,8 @@
   "dependencies": {
     "@phaserjs/editor-scripts-core": "^2.0.0",
     "@phaserjs/editor-scripts-simple-animations": "^2.0.0",
+    "ink": "^5.0.1",
+    "inkjs": "^2.3.0",
     "phaser": "3.80.1"
   }
 }

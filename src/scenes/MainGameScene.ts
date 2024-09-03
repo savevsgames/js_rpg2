@@ -4,76 +4,92 @@
 
 import Phaser from "phaser";
 /* START-USER-IMPORTS */
-import { Player, PlayerState } from "../game_scripts/player";
+import { Character, CharacterState } from "../game_scripts/character";
 import Grid from "../game_scripts/utils/grid";
 import utils from "../game_scripts/utils/utils";
 import StoryBox from "../game_scripts/StoryBox";
 import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 import { DirectionInput } from "../game_scripts/utils/DirectionInput";
 import { CollisionChecker } from "../game_scripts/utils/CollisionChecker";
+import * as inkjs from "inkjs";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
-  constructor() {
-    super("MainGameScene");
 
-    /* START-USER-CTR-CODE */
+	constructor() {
+		super("MainGameScene");
+
+		/* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
+
     // Write your code here.
     /* END-USER-CTR-CODE */
-  }
+	}
 
-  preload(): void {
-    this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
-  }
+	preload(): void {
 
-  editorCreate(): void {
-    // test_castle
-    const test_castle = this.add.tilemap("test_castle");
-    test_castle.addTilesetImage(
-      "ShadowtideKeepEntranceMap_test_1",
-      "ShadowtideKeepEntranceMap_test_1"
-    );
+		this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
+	}
 
-    // shadowtideKeepEntranceMap_test_1
-    this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
+	editorCreate(): void {
 
-    // text_1
-    const text_1 = this.add.text(3453, 1984, "", {});
-    text_1.text = "SHADOWTIDE\nISLAND";
-    text_1.setStyle({
-      align: "right",
-      color: "#ceba96ff",
-      fontSize: "54px",
-      fontStyle: "bold",
-      stroke: "#000000ff",
-      strokeThickness: 5,
-      "shadow.offsetX": 13,
-      "shadow.offsetY": 8,
-      "shadow.blur": 5,
-      "shadow.fill": true,
-    });
+		// test_castle
+		const test_castle = this.add.tilemap("test_castle");
+		test_castle.addTilesetImage("ShadowtideKeepEntranceMap_test_1", "ShadowtideKeepEntranceMap_test_1");
 
-    // tile_Layer
-    const tile_Layer = test_castle.createLayer(
-      "Tile Layer 1",
-      ["ShadowtideKeepEntranceMap_test_1"],
-      0,
-      0
-    )!;
+		// shadowtideKeepEntranceMap_test_1
+		this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
 
-    this.tile_Layer = tile_Layer;
-    this.test_castle = test_castle;
+		// tile_Layer
+		const tile_Layer = test_castle.createLayer("Tile Layer 1", ["ShadowtideKeepEntranceMap_test_1"], 0, 0)!;
 
-    this.events.emit("scene-awake");
-  }
+		// mapgrass1
+		const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
+		mapgrass1.scaleX = 2;
+		mapgrass1.scaleY = 2;
 
-  private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
-  private test_castle!: Phaser.Tilemaps.Tilemap;
+		// fantasy_ship
+		this.add.image(1920, 1080, "fantasy_ship");
 
-  /* START-USER-CODE */
-  private player!: Player;
+		// text_1
+		const text_1 = this.add.text(64, 64, "", {});
+		text_1.text = "SHADOWTIDE\nISLAND";
+		text_1.setStyle({ "color": "#ceba96ff", "fontSize": "185px", "fontStyle": "bold", "stroke": "#000000ff", "strokeThickness":10,"shadow.offsetX":13,"shadow.offsetY":8,"shadow.blur":5,"shadow.fill":true});
+
+		// rectangle_1
+		const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
+		rectangle_1.scaleX = 6.9;
+		rectangle_1.scaleY = 12.1;
+		rectangle_1.isFilled = true;
+		rectangle_1.fillAlpha = 0.38;
+		rectangle_1.isStroked = true;
+		rectangle_1.strokeColor = 0;
+		rectangle_1.strokeAlpha = 0.42;
+		rectangle_1.lineWidth = 6.65;
+
+		// shadowFx
+		rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
+
+		// text_2
+		const text_2 = this.add.text(144, 640, "", {});
+		text_2.text = "Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with \"m\"\n\n- remove grid with \"g\"\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.";
+		text_2.setStyle({ "color": "#000000ff", "fontSize": "62px", "fontStyle": "bold", "maxLines":61});
+		text_2.setWordWrapWidth(749);
+
+		this.tile_Layer = tile_Layer;
+		this.rectangle_1 = rectangle_1;
+		this.test_castle = test_castle;
+
+		this.events.emit("scene-awake");
+	}
+
+	private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
+	private rectangle_1!: Phaser.GameObjects.Rectangle;
+	private test_castle!: Phaser.Tilemaps.Tilemap;
+
+	/* START-USER-CODE */
+  private character!: Character;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private grid: Grid | null;
   private cellSize: number;
@@ -81,6 +97,11 @@ export default class MainGameScene extends Phaser.Scene {
   private directionInput = new DirectionInput();
   private collisionChecker!: CollisionChecker;
   private debugGraphics!: Phaser.GameObjects.Graphics;
+  private jsonData: any;
+  private backgroundMusic!: Phaser.Sound.BaseSound;
+  private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
+  private characters: Character[] = []; // Array to store all characters
+  private selectedCharacter: Character | null = null; // Track selected character
 
   create() {
     this.editorCreate();
@@ -98,7 +119,19 @@ export default class MainGameScene extends Phaser.Scene {
     this.grid = new Grid(this, this.cellSize);
 
     // Initialize the player
-    this.player = new Player(this, 5, 5, "Warrior_Blue", 128, this.grid);
+    this.character = new Character(this, 5, 5, "Warrior_Blue", 128, this.grid);
+    this.characters.push(this.character);
+    const character_2 = new Character(
+      this,
+      20,
+      5,
+      "Warrior_Blue",
+      128,
+      this.grid
+    );
+    this.characters.push(character_2);
+    // Initialize selected character as null
+    this.selectedCharacter = null;
 
     // Set up DirectionInput for WASD
     this.directionInput.init();
@@ -108,38 +141,56 @@ export default class MainGameScene extends Phaser.Scene {
 
     // CAMERA SETTINGS
     this.cameras.main.setBounds(0, 0, 3840, 2160);
-    this.cameras.main.startFollow(this.player);
+    // this.cameras.main.startFollow(this.player);
+    // Set up camera controls
+    this.cursors = this.input.keyboard!.createCursorKeys();
+    const controlConfig = {
+      camera: this.cameras.main,
+      left: this.cursors.left,
+      right: this.cursors.right,
+      up: this.cursors.up,
+      down: this.cursors.down,
+      acceleration: 0.06,
+      drag: 0.0005,
+      maxSpeed: 0.5,
+    };
+    this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
+      controlConfig
+    );
 
     // INPUT HANDLING
     this.input.keyboard?.on("keydown-G", () => {
       this.grid?.toggle();
     });
+    // Map the "M" key for melee attacks
+    this.input.keyboard?.on("keydown-M", () => {
+      if (this.selectedCharacter) {
+        this.selectedCharacter.attack(); // Call attack on the selected character
+      }
+    });
+    // Add a click handler to select the player character
+    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      this.handlePointerDown(pointer);
+    });
+    // this.input.on("pointerdown", () => this.player.attack());
 
-    this.input.on("pointerdown", () => this.player.attack());
+    // STORY JSON CREATION
+    const storyData = this.cache.json.entries.get("chapter_1.ink");
 
-    // STORY BOX CONFIGURATION
-    const storyConfig: StoryBoxConfig = {
-      texts: [
-        "Welcome to Shadowtide Island!",
-        "Your adventure begins here...",
-        "Explore the mysteries that await you.",
-      ],
-      style: {
-        fontSize: "40px",
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        textColor: "yellow",
-        padding: "30px",
-        borderRadius: "15px",
-        fontFamily: "Georgia, serif",
-      },
-      revealSpeed: 50,
-      onComplete: () => {
-        console.log("Story completed!");
-        // Add any logic you want to run after the story is complete
-      },
-    };
-    this.storyBox = new StoryBox(this, storyConfig);
-    this.storyBox.create();
+    if (storyData) {
+      // Now you can use this data to create your Ink story
+      const story = new inkjs.Story(storyData);
+
+      // Use the story object as needed
+      console.log(story.Continue());
+    } else {
+      console.error("Failed to load ink story data");
+    }
+    const inkStory = new inkjs.Story(storyData);
+
+    // STORY BOX CONFIGURATION using Ink content
+
+    this.displayInkContent(inkStory);
 
     // Initialize Collision Checker
     this.collisionChecker = new CollisionChecker(
@@ -147,72 +198,182 @@ export default class MainGameScene extends Phaser.Scene {
       this.tile_Layer,
       this.grid
     );
-    this.player.updateOccupiedGrids();
-    this.visualizeOccupiedGrids(this.player.getOccupiedGrids(), 0x00ff00); // Current position in green
-    console.log("Occupied Grids:", this.player.getOccupiedGrids());
+    this.character.updateOccupiedGrids();
+    this.visualizeOccupiedGrids(this.character.getOccupiedGrids(), 0x00ff00); // Current position in green
+    console.log("Occupied Grids:", this.character.getOccupiedGrids());
+
+    // Add Music to the Scene
+    // Initialize the background music
+    this.backgroundMusic = this.sound.add("The_Journey_Begins_110bpm_120s");
+
+    // Play the background music
+    this.backgroundMusic.play({
+      loop: true, // Make the music loop
+      volume: 0.5, // Adjust the volume as needed
+    });
+  } // End of create method
+
+  /**
+   *
+   * @param inkStory
+   *
+   */
+  // Add the displayInkContent method inside your MainGameScene class
+  displayInkContent(inkStory: inkjs.Story): void {
+    let storyContent: string[] = [];
+
+    // Ensure to get the first piece of content right away
+    if (inkStory.canContinue) {
+      storyContent.push(inkStory?.Continue()?.trim() || "");
+    }
+
+    // Continue the story until there's no more content or a choice is reached
+    while (inkStory.canContinue || inkStory.currentChoices.length > 0) {
+      // Add the current story content
+      if (inkStory.canContinue) {
+        storyContent.push(inkStory?.Continue()?.trim() || "");
+      }
+
+      // Handle choices if any
+      if (inkStory.currentChoices.length > 0) {
+        inkStory.currentChoices.forEach((choice, index) => {
+          storyContent.push(`${index + 1}: ${choice.text}`);
+        });
+
+        // Make a choice (for debugging purposes, always pick the first one)
+        inkStory.ChooseChoiceIndex(0);
+      }
+    }
+
+    // Filter out any empty strings
+    const filteredStoryContent = storyContent.filter(
+      (text): text is string => text.length > 0
+    );
+
+    // Log the entire content
+    console.log("Story Content:", filteredStoryContent.join("\n"));
+
+    // STORY BOX CONFIGURATION
+    const storyConfig: StoryBoxConfig = {
+      texts: filteredStoryContent,
+      style: {
+        fontSize: "40px",
+        backgroundColor: "rgb(199, 147, 99)",
+        textColor: "rgb(24, 18, 12)",
+        padding: "2rem",
+        borderRadius: "2rem",
+        fontFamily:
+          "Copperplate, Papyrus, Playbill, Luminari, Garamond, Georgia, serif",
+      },
+      revealSpeed: 30,
+      onComplete: () => {
+        console.log("Story completed!");
+      },
+    };
+
+    this.storyBox = new StoryBox(this, storyConfig);
+    this.storyBox.create();
   }
 
   update(time: number, delta: number): void {
-    // Update story box if present
+    // Update camera controls
+    if (this.controls) {
+      this.controls.update(delta);
+    }
+
+    // Update the grid, if present
+    if (this.grid) {
+      this.grid.updateGrid();
+    }
+
+    // Update the story box, if present
     this.storyBox?.update();
 
-    // Get the current direction from DirectionInput
-    const direction = this.directionInput.direction;
+    // Ensure that we have a selected character
+    if (this.selectedCharacter) {
+      // Visualize the occupied grids for the selected character
+      this.debugGraphics.clear();
+      this.visualizeOccupiedGrids(
+        this.selectedCharacter.getOccupiedGrids(),
+        0x00ff00
+      ); // Green for selected character
 
-    if (direction && this.player.getCurrentState() === PlayerState.IDLE) {
-      // Start movement based on the direction input
-      switch (direction) {
-        case "up":
-          this.player.moveUp();
-          break;
-        case "down":
-          this.player.moveDown();
-          break;
-        case "left":
-          this.player.moveLeft();
-          break;
-        case "right":
-          this.player.moveRight();
-          break;
-      }
+      // Get the current direction from DirectionInput
+      const direction = this.directionInput.direction;
 
-      // Get the player's current occupied grids
-      const playerLocation = this.player.getOccupiedGrids();
-      if (this.grid) {
+      // Only allow movement if the selected character is idle
+      if (
+        direction &&
+        this.selectedCharacter.getCurrentState() === CharacterState.IDLE
+      ) {
+        // Start movement based on the direction input
+        switch (direction) {
+          case "up":
+            this.selectedCharacter.moveUp();
+            break;
+          case "down":
+            this.selectedCharacter.moveDown();
+            break;
+          case "left":
+            this.selectedCharacter.moveLeft();
+            break;
+          case "right":
+            this.selectedCharacter.moveRight();
+            break;
+        }
+
+        // Get the selected character's current occupied grids
+        const characterLocation = this.selectedCharacter.getOccupiedGrids();
+
         // Calculate the next position based on direction
-        const nextOccupiedGrids = utils.nextPosition(playerLocation, direction);
-        // console.log("Next Grid Position before move:", nextOccupiedGrids);
+        const nextOccupiedGrids = utils.nextPosition(
+          characterLocation,
+          direction
+        );
 
         // Check if any of the next occupied grids are blocked
         const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
         console.log("Can Move:", canMove);
 
-        // Visualize current and next positions for debugging
-        this.debugGraphics.clear();
-        this.visualizeOccupiedGrids(this.player.getOccupiedGrids(), 0x00ff00); // Current position in green
-        this.visualizeOccupiedGrids(nextOccupiedGrids, 0xff0000); // Next position in red
+        // Visualize the next positions for debugging
+        this.visualizeOccupiedGrids(nextOccupiedGrids, 0xff0000); // Red for next position
 
         if (canMove) {
           // Calculate the central position of the next occupied grids
           const centerGrid = this.calculateCenterPosition(nextOccupiedGrids);
-          // console.log("Center Grid:", centerGrid);
 
           // Convert the grid coordinates to world coordinates in grid size
           const worldX = centerGrid.x;
           const worldY = centerGrid.y;
 
-          // Set the player's position to this central position
-          this.player.setPosition(worldX, worldY);
-          // console.log("Player moved to:", utils.asGridCoord(worldX, worldY));
+          // Set the selected character's position to this central position
+          this.selectedCharacter.setCharacterPosition(
+            worldX,
+            worldY,
+            delta,
+            20
+          );
 
-          // Update the player's occupied grids after moving
-          this.player.updateOccupiedGrids();
-          this.player.setPlayerState(PlayerState.IDLE); // Set player state to IDLE
+          // Update the character's occupied grids after moving
+          this.selectedCharacter.updateOccupiedGrids();
+          this.selectedCharacter.setPlayerState(CharacterState.IDLE); // Set character state to IDLE
         } else {
           console.log("Movement blocked.");
-          this.player.stopMoving();
+          this.selectedCharacter.stopMoving();
         }
       }
+    } else {
+      // Show default UI or handle no character selected state
+      console.log("No character selected.");
+      this.debugGraphics.clear();
+    }
+  }
+
+  // Update camera bounds when screen moves
+  updateCameraBounds(x: number, y: number, width: number, height: number) {
+    this.cameras.main.setBounds(x, y, width, height);
+    if (this.grid) {
+      this.grid.updateGrid();
     }
   }
 
@@ -234,8 +395,10 @@ export default class MainGameScene extends Phaser.Scene {
     const topLeftY = firstGrid.y * this.cellSize;
 
     // Calculate the center by adding half the player's width and height
-    const centerX = topLeftX + (this.player.width * this.player.scaleX) / 2;
-    const centerY = topLeftY + (this.player.height * this.player.scaleY) / 2;
+    const centerX =
+      topLeftX + (this.character.width * this.character.scaleX) / 2;
+    const centerY =
+      topLeftY + (this.character.height * this.character.scaleY) / 2;
 
     console.log(`Grid Center World Coords: (${centerX}, ${centerY})`);
 
@@ -243,6 +406,34 @@ export default class MainGameScene extends Phaser.Scene {
       x: centerX,
       y: centerY,
     };
+  }
+
+  handlePointerDown(pointer: Phaser.Input.Pointer) {
+    // Get the world coordinates of the pointer click
+    const worldPoint = pointer.positionToCamera(
+      this.cameras.main
+    ) as Phaser.Math.Vector2;
+
+    // Check if any character was clicked
+    const clickedCharacter = this.characters.find((character) => {
+      const bounds = character.getBounds();
+      return bounds.contains(worldPoint.x, worldPoint.y);
+    });
+
+    if (clickedCharacter) {
+      this.selectCharacter(clickedCharacter);
+    } else {
+      this.selectCharacter(null); // Deselect character
+    }
+  }
+
+  selectCharacter(character: Character | null) {
+    this.selectedCharacter = character;
+    if (character) {
+      console.log("Character selected:", character.texture.key);
+    } else {
+      console.log("No character selected.");
+    }
   }
 
   private visualizeOccupiedGrids(
@@ -264,8 +455,9 @@ export default class MainGameScene extends Phaser.Scene {
     this.storyBox?.destroy();
     this.storyBox = null;
   }
+
+  /* END-USER-CODE */
 }
-/* END-USER-CODE */
 
 /* END OF COMPILED CODE */
 
