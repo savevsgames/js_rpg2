@@ -6,7 +6,7 @@ import Phaser from "phaser";
 /* START-USER-IMPORTS */
 import { Character, CharacterState } from "../game_scripts/character";
 import Grid from "../game_scripts/utils/grid";
-import utils from "../game_scripts/utils/utils";
+import utils, { withGrid } from "../game_scripts/utils/utils";
 import StoryBox from "../game_scripts/StoryBox";
 import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 import { DirectionInput } from "../game_scripts/utils/DirectionInput";
@@ -18,6 +18,7 @@ import {
   SceneActionType,
 } from "../../src/game_scripts/SceneAction";
 import { SceneActionManager } from "../../src/game_scripts/SceneActionManager";
+import speed from "../game_scripts/utils/utils";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
@@ -129,9 +130,13 @@ export default class MainGameScene extends Phaser.Scene {
   private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
   private characters: Character[] = []; // Array to store all characters
   private selectedCharacter: Character | null = null; // Track selected character
+  private actionManager!: SceneActionManager; // Declare the actionManager property
+  private speed: number;
 
   create() {
     this.editorCreate();
+
+    let delta = this.game.loop.delta;
 
     // Initialize debug graphics for visualizing occupied grids
     this.debugGraphics = this.add.graphics({
@@ -146,6 +151,7 @@ export default class MainGameScene extends Phaser.Scene {
     this.grid = new Grid(this, this.cellSize);
 
     // Initialize the player
+    this.speed = utils.speed;
     this.character = new Character(this, 5, 5, "Warrior_Blue", 128, this.grid);
     this.characters.push(this.character);
     const character_2 = new Character(
@@ -200,6 +206,32 @@ export default class MainGameScene extends Phaser.Scene {
       this.handlePointerDown(pointer);
     });
     // this.input.on("pointerdown", () => this.player.attack());
+    // Add zoom controls using the mouse wheel
+    this.input.on(
+      "wheel",
+      (
+        pointer: Phaser.Input.Pointer,
+        gameObjects: any,
+        deltaX: number,
+        deltaY: number,
+        deltaZ: number
+      ) => {
+        // Check if an action is currently playing
+        if (!this.actionManager.isActionPlaying()) {
+          const zoomFactor = 0.001; // Adjust zoom sensitivity as needed
+          const newZoom = Phaser.Math.Clamp(
+            this.cameras.main.zoom - deltaY * zoomFactor,
+            0.5,
+            2
+          );
+
+          // Use the action manager to queue the zoom action
+          const zoomAction = new SceneAction("zoomCamera", { zoom: newZoom });
+
+          this.actionManager.queueAction(zoomAction);
+        }
+      }
+    );
 
     // STORY JSON CREATION
     const storyData = this.cache.json.entries.get("chapter_1.ink");
@@ -241,18 +273,27 @@ export default class MainGameScene extends Phaser.Scene {
 
     // SCENE ACTION MANAGER
     // Create SceneActionManager instance
-    const actionManager = new SceneActionManager(this);
+    // const actionManager = new SceneActionManager(this);
+    // Initialize the action manager
+    this.actionManager = new SceneActionManager(this);
 
     // Queue actions
-    actionManager.queueAction(
+    // Queue actions
+
+    // Move camera to a specific location with a certain zoom level
+    this.actionManager.queueAction(
       new SceneAction("moveCameraTo", { x: 1920, y: 1080, zoom: 0.5 })
     );
-    actionManager.queueAction(
-      new SceneAction("changeCharacterState", {
+
+    // Move the character to a specific position
+    this.actionManager.queueAction(
+      new SceneAction("moveCharacterTo", {
         character: character_2,
-        newState: CharacterState.ATTACKING,
+        targetGrids: [{ x: 10, y: 20 }], // Ensure this is defined
+        delta: delta, // Ensure delta is provided
       })
     );
+
     //
     //
   } // End of create method
@@ -320,6 +361,9 @@ export default class MainGameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    // update delta
+    delta = this.game.loop.delta;
+
     // Update camera controls
     if (this.controls) {
       this.controls.update(delta);
@@ -386,17 +430,16 @@ export default class MainGameScene extends Phaser.Scene {
           // Calculate the central position of the next occupied grids
           const centerGrid = this.calculateCenterPosition(nextOccupiedGrids);
 
-          // Convert the grid coordinates to world coordinates in grid size
-          const worldX = centerGrid.x;
-          const worldY = centerGrid.y;
+          // conver centerGrid to world coordinates in grid units
+          const worldXGrid = Math.floor(centerGrid.x / this.cellSize);
+          const worldYGrid = Math.floor(centerGrid.y / this.cellSize);
+
+          // create a new array with the new grid position
+          const newGridPosition = [{ x: worldXGrid, y: worldYGrid }];
+          this.selectedCharacter.setTargetGrids(newGridPosition);
 
           // Set the selected character's position to this central position
-          this.selectedCharacter.setCharacterPosition(
-            worldX,
-            worldY,
-            delta,
-            20
-          );
+          this.selectedCharacter.setCharacterPosition(newGridPosition, delta);
 
           // Update the character's occupied grids after moving
           this.selectedCharacter.updateOccupiedGrids();
