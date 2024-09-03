@@ -15,101 +15,80 @@ import * as inkjs from "inkjs";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
-  constructor() {
-    super("MainGameScene");
 
-    /* START-USER-CTR-CODE */
+	constructor() {
+		super("MainGameScene");
+
+		/* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
 
     // Write your code here.
     /* END-USER-CTR-CODE */
-  }
+	}
 
-  preload(): void {
-    this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
-  }
+	preload(): void {
 
-  editorCreate(): void {
-    // test_castle
-    const test_castle = this.add.tilemap("test_castle");
-    test_castle.addTilesetImage(
-      "ShadowtideKeepEntranceMap_test_1",
-      "ShadowtideKeepEntranceMap_test_1"
-    );
+		this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
+	}
 
-    // shadowtideKeepEntranceMap_test_1
-    this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
+	editorCreate(): void {
 
-    // tile_Layer
-    const tile_Layer = test_castle.createLayer(
-      "Tile Layer 1",
-      ["ShadowtideKeepEntranceMap_test_1"],
-      0,
-      0
-    )!;
+		// test_castle
+		const test_castle = this.add.tilemap("test_castle");
+		test_castle.addTilesetImage("ShadowtideKeepEntranceMap_test_1", "ShadowtideKeepEntranceMap_test_1");
 
-    // mapgrass1
-    const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
-    mapgrass1.scaleX = 2;
-    mapgrass1.scaleY = 2;
+		// shadowtideKeepEntranceMap_test_1
+		this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
 
-    // fantasy_ship
-    this.add.image(1920, 1080, "fantasy_ship");
+		// tile_Layer
+		const tile_Layer = test_castle.createLayer("Tile Layer 1", ["ShadowtideKeepEntranceMap_test_1"], 0, 0)!;
 
-    // text_1
-    const text_1 = this.add.text(64, 64, "", {});
-    text_1.text = "SHADOWTIDE\nISLAND";
-    text_1.setStyle({
-      color: "#ceba96ff",
-      fontSize: "185px",
-      fontStyle: "bold",
-      stroke: "#000000ff",
-      strokeThickness: 10,
-      "shadow.offsetX": 13,
-      "shadow.offsetY": 8,
-      "shadow.blur": 5,
-      "shadow.fill": true,
-    });
+		// mapgrass1
+		const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
+		mapgrass1.scaleX = 2;
+		mapgrass1.scaleY = 2;
 
-    // rectangle_1
-    const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
-    rectangle_1.scaleX = 6.9;
-    rectangle_1.scaleY = 12.1;
-    rectangle_1.isFilled = true;
-    rectangle_1.fillAlpha = 0.38;
-    rectangle_1.isStroked = true;
-    rectangle_1.strokeColor = 0;
-    rectangle_1.strokeAlpha = 0.42;
-    rectangle_1.lineWidth = 6.65;
+		// fantasy_ship
+		this.add.image(1920, 1080, "fantasy_ship");
 
-    // shadowFx
-    rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
+		// text_1
+		const text_1 = this.add.text(64, 64, "", {});
+		text_1.text = "SHADOWTIDE\nISLAND";
+		text_1.setStyle({ "color": "#ceba96ff", "fontSize": "185px", "fontStyle": "bold", "stroke": "#000000ff", "strokeThickness":10,"shadow.offsetX":13,"shadow.offsetY":8,"shadow.blur":5,"shadow.fill":true});
 
-    // text_2
-    const text_2 = this.add.text(144, 640, "", {});
-    text_2.text =
-      'Use the arrow keys to move the camera. \n\nSelect a token to move with W,A,S,D\n\nClick the story window or hit Enter to "turn the page" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.';
-    text_2.setStyle({
-      color: "#000000ff",
-      fontSize: "72px",
-      fontStyle: "bold",
-      maxLines: 23,
-    });
-    text_2.setWordWrapWidth(789);
+		// rectangle_1
+		const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
+		rectangle_1.scaleX = 6.9;
+		rectangle_1.scaleY = 12.1;
+		rectangle_1.isFilled = true;
+		rectangle_1.fillAlpha = 0.38;
+		rectangle_1.isStroked = true;
+		rectangle_1.strokeColor = 0;
+		rectangle_1.strokeAlpha = 0.42;
+		rectangle_1.lineWidth = 6.65;
 
-    this.tile_Layer = tile_Layer;
-    this.rectangle_1 = rectangle_1;
-    this.test_castle = test_castle;
+		// shadowFx
+		rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
 
-    this.events.emit("scene-awake");
-  }
+		// text_2
+		const text_2 = this.add.text(144, 640, "", {});
+		text_2.text = "Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with \"m\"\n\n- remove grid with \"g\"\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.";
+		text_2.setStyle({ "color": "#000000ff", "fontSize": "62px", "fontStyle": "bold", "maxLines":61});
+		text_2.setWordWrapWidth(749);
 
-  private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
-  private rectangle_1!: Phaser.GameObjects.Rectangle;
-  private test_castle!: Phaser.Tilemaps.Tilemap;
+		this.tile_Layer = tile_Layer;
+		this.rectangle_1 = rectangle_1;
+		this.test_castle = test_castle;
 
-  /* START-USER-CODE */
+		this.events.emit("scene-awake");
+	}
+
+	private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
+	private rectangle_1!: Phaser.GameObjects.Rectangle;
+	private test_castle!: Phaser.Tilemaps.Tilemap;
+
+	/* START-USER-CODE */
   private character!: Character;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private grid: Grid | null;

@@ -107,12 +107,12 @@
             "label": "text_2",
             "x": 144,
             "y": 640,
-            "text": "Use the arrow keys to move the camera. \n\nSelect a token to move with W,A,S,D\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.",
-            "fontSize": "72px",
+            "text": "Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with \"m\"\n\n- remove grid with \"g\"\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.",
+            "fontSize": "62px",
             "fontStyle": "bold",
             "color": "#000000ff",
-            "maxLines": 23,
-            "wordWrapWidth": 789
+            "maxLines": 61,
+            "wordWrapWidth": 749
         }
     ],
     "plainObjects": [
