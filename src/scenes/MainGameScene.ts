@@ -12,83 +12,110 @@ import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 import { DirectionInput } from "../game_scripts/utils/DirectionInput";
 import { CollisionChecker } from "../game_scripts/utils/CollisionChecker";
 import * as inkjs from "inkjs";
+// Add SceneActionManager to the Scene
+import {
+  SceneAction,
+  SceneActionType,
+} from "../../src/game_scripts/SceneAction";
+import { SceneActionManager } from "../../src/game_scripts/SceneActionManager";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
+  constructor() {
+    super("MainGameScene");
 
-	constructor() {
-		super("MainGameScene");
-
-		/* START-USER-CTR-CODE */
+    /* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
 
     // Write your code here.
     /* END-USER-CTR-CODE */
-	}
+  }
 
-	preload(): void {
+  preload(): void {
+    this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
+  }
 
-		this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
-	}
+  editorCreate(): void {
+    // test_castle
+    const test_castle = this.add.tilemap("test_castle");
+    test_castle.addTilesetImage(
+      "ShadowtideKeepEntranceMap_test_1",
+      "ShadowtideKeepEntranceMap_test_1"
+    );
 
-	editorCreate(): void {
+    // shadowtideKeepEntranceMap_test_1
+    this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
 
-		// test_castle
-		const test_castle = this.add.tilemap("test_castle");
-		test_castle.addTilesetImage("ShadowtideKeepEntranceMap_test_1", "ShadowtideKeepEntranceMap_test_1");
+    // tile_Layer
+    const tile_Layer = test_castle.createLayer(
+      "Tile Layer 1",
+      ["ShadowtideKeepEntranceMap_test_1"],
+      0,
+      0
+    )!;
 
-		// shadowtideKeepEntranceMap_test_1
-		this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
+    // mapgrass1
+    const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
+    mapgrass1.scaleX = 2;
+    mapgrass1.scaleY = 2;
 
-		// tile_Layer
-		const tile_Layer = test_castle.createLayer("Tile Layer 1", ["ShadowtideKeepEntranceMap_test_1"], 0, 0)!;
+    // fantasy_ship
+    this.add.image(1920, 1080, "fantasy_ship");
 
-		// mapgrass1
-		const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
-		mapgrass1.scaleX = 2;
-		mapgrass1.scaleY = 2;
+    // text_1
+    const text_1 = this.add.text(64, 64, "", {});
+    text_1.text = "SHADOWTIDE\nISLAND";
+    text_1.setStyle({
+      color: "#ceba96ff",
+      fontSize: "185px",
+      fontStyle: "bold",
+      stroke: "#000000ff",
+      strokeThickness: 10,
+      "shadow.offsetX": 13,
+      "shadow.offsetY": 8,
+      "shadow.blur": 5,
+      "shadow.fill": true,
+    });
 
-		// fantasy_ship
-		this.add.image(1920, 1080, "fantasy_ship");
+    // rectangle_1
+    const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
+    rectangle_1.scaleX = 6.9;
+    rectangle_1.scaleY = 12.1;
+    rectangle_1.isFilled = true;
+    rectangle_1.fillAlpha = 0.38;
+    rectangle_1.isStroked = true;
+    rectangle_1.strokeColor = 0;
+    rectangle_1.strokeAlpha = 0.42;
+    rectangle_1.lineWidth = 6.65;
 
-		// text_1
-		const text_1 = this.add.text(64, 64, "", {});
-		text_1.text = "SHADOWTIDE\nISLAND";
-		text_1.setStyle({ "color": "#ceba96ff", "fontSize": "185px", "fontStyle": "bold", "stroke": "#000000ff", "strokeThickness":10,"shadow.offsetX":13,"shadow.offsetY":8,"shadow.blur":5,"shadow.fill":true});
+    // shadowFx
+    rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
 
-		// rectangle_1
-		const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
-		rectangle_1.scaleX = 6.9;
-		rectangle_1.scaleY = 12.1;
-		rectangle_1.isFilled = true;
-		rectangle_1.fillAlpha = 0.38;
-		rectangle_1.isStroked = true;
-		rectangle_1.strokeColor = 0;
-		rectangle_1.strokeAlpha = 0.42;
-		rectangle_1.lineWidth = 6.65;
+    // text_2
+    const text_2 = this.add.text(144, 640, "", {});
+    text_2.text =
+      'Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with "m"\n\n- remove grid with "g"\n\nClick the story window or hit Enter to "turn the page" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.';
+    text_2.setStyle({
+      color: "#000000ff",
+      fontSize: "62px",
+      fontStyle: "bold",
+      maxLines: 61,
+    });
+    text_2.setWordWrapWidth(749);
 
-		// shadowFx
-		rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
+    this.tile_Layer = tile_Layer;
+    this.rectangle_1 = rectangle_1;
+    this.test_castle = test_castle;
 
-		// text_2
-		const text_2 = this.add.text(144, 640, "", {});
-		text_2.text = "Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with \"m\"\n\n- remove grid with \"g\"\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.";
-		text_2.setStyle({ "color": "#000000ff", "fontSize": "62px", "fontStyle": "bold", "maxLines":61});
-		text_2.setWordWrapWidth(749);
+    this.events.emit("scene-awake");
+  }
 
-		this.tile_Layer = tile_Layer;
-		this.rectangle_1 = rectangle_1;
-		this.test_castle = test_castle;
+  private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
+  private rectangle_1!: Phaser.GameObjects.Rectangle;
+  private test_castle!: Phaser.Tilemaps.Tilemap;
 
-		this.events.emit("scene-awake");
-	}
-
-	private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
-	private rectangle_1!: Phaser.GameObjects.Rectangle;
-	private test_castle!: Phaser.Tilemaps.Tilemap;
-
-	/* START-USER-CODE */
+  /* START-USER-CODE */
   private character!: Character;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private grid: Grid | null;
@@ -211,6 +238,23 @@ export default class MainGameScene extends Phaser.Scene {
       loop: true, // Make the music loop
       volume: 0.5, // Adjust the volume as needed
     });
+
+    // SCENE ACTION MANAGER
+    // Create SceneActionManager instance
+    const actionManager = new SceneActionManager(this);
+
+    // Queue actions
+    actionManager.queueAction(
+      new SceneAction("moveCameraTo", { x: 1920, y: 1080, zoom: 0.5 })
+    );
+    actionManager.queueAction(
+      new SceneAction("changeCharacterState", {
+        character: character_2,
+        newState: CharacterState.ATTACKING,
+      })
+    );
+    //
+    //
   } // End of create method
 
   /**
