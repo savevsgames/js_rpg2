@@ -6,7 +6,7 @@ import Phaser from "phaser";
 /* START-USER-IMPORTS */
 import { Character, CharacterState } from "../game_scripts/character";
 import Grid from "../game_scripts/utils/grid";
-import utils from "../game_scripts/utils/utils";
+import utils, { withGrid } from "../game_scripts/utils/utils";
 import StoryBox from "../game_scripts/StoryBox";
 import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 import { DirectionInput } from "../game_scripts/utils/DirectionInput";
@@ -18,6 +18,7 @@ import {
   SceneActionType,
 } from "../../src/game_scripts/SceneAction";
 import { SceneActionManager } from "../../src/game_scripts/SceneActionManager";
+import speed from "../game_scripts/utils/utils";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
@@ -27,6 +28,7 @@ export default class MainGameScene extends Phaser.Scene {
     /* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
+    this.characters;
 
     // Write your code here.
     /* END-USER-CTR-CODE */
@@ -129,9 +131,13 @@ export default class MainGameScene extends Phaser.Scene {
   private controls!: Phaser.Cameras.Controls.SmoothedKeyControl;
   private characters: Character[] = []; // Array to store all characters
   private selectedCharacter: Character | null = null; // Track selected character
+  private actionManager!: SceneActionManager; // Declare the actionManager property
+  private speed: number;
 
   create() {
     this.editorCreate();
+
+    let delta = this.game.loop.delta;
 
     // Initialize debug graphics for visualizing occupied grids
     this.debugGraphics = this.add.graphics({
@@ -146,16 +152,10 @@ export default class MainGameScene extends Phaser.Scene {
     this.grid = new Grid(this, this.cellSize);
 
     // Initialize the player
-    this.character = new Character(this, 5, 5, "Warrior_Blue", 128, this.grid);
+    this.speed = utils.speed;
+    this.character = new Character(this, 5, 5, "Warrior_Blue", this.grid);
     this.characters.push(this.character);
-    const character_2 = new Character(
-      this,
-      20,
-      5,
-      "Warrior_Blue",
-      128,
-      this.grid
-    );
+    const character_2 = new Character(this, 20, 5, "Warrior_Blue", this.grid);
     this.characters.push(character_2);
     // Initialize selected character as null
     this.selectedCharacter = null;
@@ -200,6 +200,32 @@ export default class MainGameScene extends Phaser.Scene {
       this.handlePointerDown(pointer);
     });
     // this.input.on("pointerdown", () => this.player.attack());
+    // Add zoom controls using the mouse wheel
+    this.input.on(
+      "wheel",
+      (
+        pointer: Phaser.Input.Pointer,
+        gameObjects: any,
+        deltaX: number,
+        deltaY: number,
+        deltaZ: number
+      ) => {
+        // Check if an action is currently playing
+        if (!this.actionManager.isActionPlaying()) {
+          const zoomFactor = 0.001; // Adjust zoom sensitivity as needed
+          const newZoom = Phaser.Math.Clamp(
+            this.cameras.main.zoom - deltaY * zoomFactor,
+            0.5,
+            2
+          );
+
+          // Use the action manager to queue the zoom action
+          const zoomAction = new SceneAction("zoomCamera", { zoom: newZoom });
+
+          this.actionManager.queueAction(zoomAction);
+        }
+      }
+    );
 
     // STORY JSON CREATION
     const storyData = this.cache.json.entries.get("chapter_1.ink");
@@ -241,18 +267,27 @@ export default class MainGameScene extends Phaser.Scene {
 
     // SCENE ACTION MANAGER
     // Create SceneActionManager instance
-    const actionManager = new SceneActionManager(this);
+    // const actionManager = new SceneActionManager(this);
+    // Initialize the action manager
+    this.actionManager = new SceneActionManager(this);
 
     // Queue actions
-    actionManager.queueAction(
+    // Queue actions
+
+    // Move camera to a specific location with a certain zoom level
+    this.actionManager.queueAction(
       new SceneAction("moveCameraTo", { x: 1920, y: 1080, zoom: 0.5 })
     );
-    actionManager.queueAction(
-      new SceneAction("changeCharacterState", {
-        character: character_2,
-        newState: CharacterState.ATTACKING,
-      })
-    );
+
+    // Move the character to a specific position
+    // this.actionManager.queueAction(
+    //   new SceneAction("moveCharacterTo", {
+    //     character: character_2,
+    //     targetGrids: [{ x: 10, y: 20 }], // Ensure this is defined
+    //     delta: delta, // Ensure delta is provided
+    //   })
+    // );
+
     //
     //
   } // End of create method
@@ -320,6 +355,15 @@ export default class MainGameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    // Update each character in the scene
+    this.characters.forEach((character) => {
+      character.update(delta);
+    });
+
+    // Ensure delta is updated from the game loop
+    delta = this.game.loop.delta;
+    this.debugGraphics.clear();
+
     // Update camera controls
     if (this.controls) {
       this.controls.update(delta);
@@ -333,83 +377,83 @@ export default class MainGameScene extends Phaser.Scene {
     // Update the story box, if present
     this.storyBox?.update();
 
+    let activeScenePlaying = this.actionManager.isActionPlaying();
+    console.log("Active Scene Playing:", activeScenePlaying);
+
     // Ensure that we have a selected character
     if (this.selectedCharacter) {
       // Visualize the occupied grids for the selected character
-      this.debugGraphics.clear();
+
       this.visualizeOccupiedGrids(
         this.selectedCharacter.getOccupiedGrids(),
         0x00ff00
       ); // Green for selected character
 
-      // Get the current direction from DirectionInput
-      const direction = this.directionInput.direction;
+      // Handle input and character movement if no scene action is active
+      if (!activeScenePlaying) {
+        this.handleInput(delta);
+      }
 
+      // The character class handles movement and state updates internally.
+      // No need to call an update function here.
+      if (this.selectedCharacter.getIsActing()) {
+        console.log("Character is currently acting.");
+      }
+    } else {
+      // Handle case where no character is selected
+      console.log("No character selected.");
+      this.debugGraphics.clear();
+    }
+  }
+
+  handleInput(delta: number): void {
+    // Get the current direction from DirectionInput
+    const direction = this.directionInput.direction;
+    if (this.selectedCharacter) {
       // Only allow movement if the selected character is idle
       if (
         direction &&
-        this.selectedCharacter.getCurrentState() === CharacterState.IDLE
+        this.selectedCharacter.getCharacterState() === CharacterState.IDLE
       ) {
-        // Start movement based on the direction input
         switch (direction) {
           case "up":
-            this.selectedCharacter.moveUp();
+            this.selectedCharacter.moveUp(delta);
             break;
           case "down":
-            this.selectedCharacter.moveDown();
+            this.selectedCharacter.moveDown(delta);
             break;
           case "left":
-            this.selectedCharacter.moveLeft();
+            this.selectedCharacter.moveLeft(delta);
             break;
           case "right":
-            this.selectedCharacter.moveRight();
+            this.selectedCharacter.moveRight(delta);
             break;
         }
 
-        // Get the selected character's current occupied grids
+        // Calculate the next occupied grids for the character
         const characterLocation = this.selectedCharacter.getOccupiedGrids();
-
-        // Calculate the next position based on direction
-        const nextOccupiedGrids = utils.nextPosition(
+        let nextOccupiedGrids = utils.nextPosition(
           characterLocation,
           direction
         );
+
+        console.log("Next Occupied Grids:", nextOccupiedGrids);
 
         // Check if any of the next occupied grids are blocked
         const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
         console.log("Can Move:", canMove);
 
-        // Visualize the next positions for debugging
-        this.visualizeOccupiedGrids(nextOccupiedGrids, 0xff0000); // Red for next position
-
         if (canMove) {
-          // Calculate the central position of the next occupied grids
-          const centerGrid = this.calculateCenterPosition(nextOccupiedGrids);
-
-          // Convert the grid coordinates to world coordinates in grid size
-          const worldX = centerGrid.x;
-          const worldY = centerGrid.y;
-
-          // Set the selected character's position to this central position
-          this.selectedCharacter.setCharacterPosition(
-            worldX,
-            worldY,
-            delta,
-            20
-          );
-
-          // Update the character's occupied grids after moving
-          this.selectedCharacter.updateOccupiedGrids();
-          this.selectedCharacter.setPlayerState(CharacterState.IDLE); // Set character state to IDLE
+          // Set the selected character's target grid for movement
+          this.selectedCharacter.setTargetGrids(nextOccupiedGrids);
+          this.selectedCharacter.setIsActing(true);
         } else {
           console.log("Movement blocked.");
           this.selectedCharacter.stopMoving();
         }
       }
     } else {
-      // Show default UI or handle no character selected state
       console.log("No character selected.");
-      this.debugGraphics.clear();
     }
   }
 
@@ -422,35 +466,35 @@ export default class MainGameScene extends Phaser.Scene {
   }
 
   // Helper function to calculate the center of occupied grids and return world coordinates
-  calculateCenterPosition(grids: { x: number; y: number }[]): {
-    x: number;
-    y: number;
-  } {
-    if (grids.length === 0) {
-      console.error("Grids array is empty.");
-      return { x: 0, y: 0 };
-    }
+  // calculateCenterPosition(grids: { x: number; y: number }[]): {
+  //   x: number;
+  //   y: number;
+  // } {
+  //   if (grids.length === 0) {
+  //     console.error("Grids array is empty.");
+  //     return { x: 0, y: 0 };
+  //   }
 
-    // Assume grids are all in the same size, and we already know the player's grid is centered
-    const firstGrid = grids[0];
+  //   // Assume grids are all in the same size, and we already know the player's grid is centered
+  //   const firstGrid = grids[0];
 
-    // Calculate the top-left corner of the grid in world coordinates
-    const topLeftX = firstGrid.x * this.cellSize;
-    const topLeftY = firstGrid.y * this.cellSize;
+  //   // Calculate the top-left corner of the grid in world coordinates
+  //   const topLeftX = firstGrid.x * this.cellSize;
+  //   const topLeftY = firstGrid.y * this.cellSize;
 
-    // Calculate the center by adding half the player's width and height
-    const centerX =
-      topLeftX + (this.character.width * this.character.scaleX) / 2;
-    const centerY =
-      topLeftY + (this.character.height * this.character.scaleY) / 2;
+  //   // Calculate the center by adding half the player's width and height
+  //   const centerX =
+  //     topLeftX + (this.character.width * this.character.scaleX) / 2;
+  //   const centerY =
+  //     topLeftY + (this.character.height * this.character.scaleY) / 2;
 
-    console.log(`Grid Center World Coords: (${centerX}, ${centerY})`);
+  //   console.log(`Grid Center World Coords: (${centerX}, ${centerY})`);
 
-    return {
-      x: centerX,
-      y: centerY,
-    };
-  }
+  //   return {
+  //     x: Math.floor(centerX / this.cellSize),
+  //     y: Math.floor(centerY / this.cellSize),
+  //   };
+  // }
 
   handlePointerDown(pointer: Phaser.Input.Pointer) {
     // Get the world coordinates of the pointer click
@@ -480,15 +524,15 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 
-  private visualizeOccupiedGrids(
-    grids: { x: number; y: number }[],
-    color: number
-  ) {
+  // Helper function to visualize occupied grids
+  visualizeOccupiedGrids(grids: { x: number; y: number }[], color: number) {
     this.debugGraphics.fillStyle(color, 0.3);
+
     grids.forEach((grid) => {
+      // console.log("Visualizing grid:", grid); // Log each grid being visualized
       this.debugGraphics.fillRect(
-        grid.x * this.cellSize,
-        grid.y * this.cellSize,
+        grid.x * this.cellSize, // Ensure this is the correct coordinate
+        grid.y * this.cellSize, // Ensure this is the correct coordinate
         this.cellSize,
         this.cellSize
       );

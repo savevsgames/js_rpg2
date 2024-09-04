@@ -1,0 +1,25 @@
+{
+  "inkVersion": 19,
+  "root": [
+    ["^Welcome to Shadowtide Island, adventurer!", "\n", "ev", {"^->": "0.g-0"}, {"#f": 5}],
+    ["done", {"#f": 1}],
+    ["done", {"#f": 1}],
+    [
+      "end",
+      {"#f": 1}
+    ],
+    ["g-0", "ev", {"^->": "0.g-1"}, {"#f": 5}],
+    ["^This mysterious land holds many secrets. Prepare yourself for the journey ahead.", "\n", "ev", {"^->": "0.g-2"}, {"#f": 5}],
+    ["done", {"#f": 1}],
+    ["g-1", "ev", {"^->": "0.g-2"}, {"#f": 5}],
+    ["^Will you uncover the truth behind the island's ancient ruins, or will you fall victim to its many dangers?", "\n", "ev", {"^->": "0.g-3"}, {"#f": 5}],
+    ["done", {"#f": 1}],
+    ["g-2", "ev", {"^->": "0.g-3"}, {"#f": 5}],
+    ["^Your adventure begins now...", "\n", "ev", {"^->": "0.g-end"}, {"#f": 5}],
+    ["done", {"#f": 1}],
+    [
+      "end",
+      {"#f": 1}
+    ]
+  ]
+}
