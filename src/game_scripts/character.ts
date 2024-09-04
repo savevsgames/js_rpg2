@@ -17,7 +17,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   private grid: Grid;
   private isActing: boolean = false; // Tracks if the character is acting
   private speed: number = 10; // Movement speed in pixels per second
-  private movingProgressRemaining: number = 0; // Track how much movement is left
+  private movingProgressRemaining: number; // Track how much movement is left
 
   constructor(
     scene: Phaser.Scene,
@@ -35,7 +35,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
     this.setOrigin(0.5, 0.5);
     this.updateOccupiedGrids();
-    this.movingProgressRemaining = 0;
+    this.movingProgressRemaining;
 
     this.initializeAnimations();
     this.setupEventListeners();
@@ -147,7 +147,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
     this.occupiedGrids = grids;
 
     // For debugging purposes, log the occupied grids
-    console.log("Occupied Grids Updated:", this.occupiedGrids);
+    // console.log("Occupied Grids Updated:", this.occupiedGrids);
   }
 
   // Getter for occupied grids
@@ -167,7 +167,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
   update(delta: number): void {
     // If moving progress is left, continue moving
-    console.log("Moving progress remaining:", this.movingProgressRemaining);
+    // console.log("Moving progress remaining:", this.movingProgressRemaining);
     if (this.movingProgressRemaining > 0) {
       this.updatePosition(delta);
     } else {
@@ -180,16 +180,16 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   moveToGrid(targetGrids: { x: number; y: number }[], delta: number) {
     if (this.isActing) return; // If already acting, don't trigger another movement
     this.setIsActing(true); // Mark character as acting
-    console.log("Moving to grid:", targetGrids);
+    // console.log("Moving to grid:", targetGrids);
 
     // Calculate the target position based on the center of the target grids
     // This will return 4,4 for a character that occupies 8x8 grid space
     const singleGidInCenterOfTargetGrids =
       this.calculateCenterPosition(targetGrids);
-    console.log(
-      "Choose a single grid in the center of the target grids :",
-      singleGidInCenterOfTargetGrids
-    );
+    // console.log(
+    //   "Choose a single grid in the center of the target grids :",
+    //   singleGidInCenterOfTargetGrids
+    // );
     // top left grid in target grids
     const topLeftGrid = targetGrids[0];
     // top left x and y
@@ -205,52 +205,13 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
     const targetY = topLeftY + y_offset;
 
     // Debug log to check target calculations
-    console.log(
-      `Moving character from (${this.x}, ${this.y}) to (${targetX}, ${targetY})`
-    );
+    // console.log(
+    //   `Moving character from (${this.x}, ${this.y}) to (${targetX}, ${targetY})`
+    // );
 
     // Now, move the character to the calculated position
     this.moveToPosition(targetX, targetY, delta);
   }
-
-  // // Move the character to a specific position
-  // private moveToPosition(targetX: number, targetY: number, delta: number) {
-  //   const moveDistance = this.speed * (delta / 1000);
-
-  //   // Smoothly move towards the target position
-  //   console.log(
-  //     `Moving character from (${this.x}, ${this.y}) to (${targetX}, ${targetY})`
-  //   );
-  //   this.x = Phaser.Math.Linear(this.x, targetX, moveDistance);
-  //   this.y = Phaser.Math.Linear(this.y, targetY, moveDistance);
-
-  //   // Check if the character has reached the target
-  //   const distance = Phaser.Math.Distance.Between(
-  //     this.x,
-  //     this.y,
-  //     targetX,
-  //     targetY
-  //   );
-  //   console.log(`Distance to target: ${distance}, TargetX: ${targetX}, TargetY: ${targetY}`);
-
-  //   if (distance < 10) {
-  //     this.setPosition(targetX, targetY); // Snap to the final position
-  //     console.log(
-  //       "Character has reached the target",
-  //       targetX,
-  //       targetY,
-  //       this.occupiedGrids
-  //     );
-  //     this.updateOccupiedGrids(); // Update grids
-
-  //     this.setCharacterState(CharacterState.IDLE); // Set to idle after moving
-  //     this.setIsActing(false); // Movement complete
-  //     console.log("Movement complete");
-  //   } else {
-  //     this.setCharacterState(CharacterState.WALKING); // Continue walking if not at target
-  //     console.log("Character is still walking");
-  //   }
-  // }
 
   // Update the character's position as they move towards the target
   private updatePosition(delta: number): void {
@@ -258,7 +219,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
     // Get target position once, to avoid duplicate calculations
     const { x: targetX, y: targetY } = this.getTargetPosition();
-    console.log("Target position:", targetX, targetY);
+    // console.log("Target position:", targetX, targetY);
 
     this.moveToPosition(targetX, targetY, delta); // Move the character
 
@@ -266,7 +227,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
     if (this.hasReachedTarget()) {
       // Snap to the final position
       this.setPosition(targetX, targetY);
-      console.log(`Character has reached the target: (${targetX}, ${targetY})`);
+      // console.log(`Character has reached the target: (${targetX}, ${targetY})`);
 
       this.updateOccupiedGrids(); // Update grids
       this.setCharacterState(CharacterState.IDLE); // Set to idle after movement
@@ -284,9 +245,9 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
       targetY
     );
 
-    console.log(
-      `Starting movement towards (${targetX}, ${targetY}) with progress: ${this.movingProgressRemaining}`
-    );
+    // console.log(
+    //   `Starting movement towards (${targetX}, ${targetY}) with progress: ${this.movingProgressRemaining}`
+    // );
     // Linear interpolation to move the character towards the target
     const moveDistance = this.speed * (delta / 1000);
     this.x = Phaser.Math.Linear(this.x, targetX, moveDistance);
@@ -307,7 +268,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
     const { x: offsetX, y: offsetY } = this.calculateCenterPosition(
       this.targetGrids
     );
-    console.log("Target offset:", offsetX, offsetY);
+    // console.log("Target offset:", offsetX, offsetY);
 
     // top left grid in target grids
     const topLeftGrid = this.targetGrids[0];
@@ -373,24 +334,24 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   moveLeft(delta: number): void {
     this.setCharacterState(CharacterState.WALKING, { direction: "left" });
     const nextGrid = utils.nextPosition(this.getOccupiedGrids(), "left");
-    console.log(
-      "Occupied Grids: ",
-      this.occupiedGrids,
-      "Next grid: ",
-      nextGrid
-    );
+    // console.log(
+    //   "Occupied Grids: ",
+    //   this.occupiedGrids,
+    //   "Next grid: ",
+    //   nextGrid
+    // );
     this.moveToGrid(nextGrid, delta);
   }
 
   moveRight(delta: number): void {
     this.setCharacterState(CharacterState.WALKING, { direction: "right" });
     const nextGrid = utils.nextPosition(this.getOccupiedGrids(), "right");
-    console.log(
-      "Occupied Grids: ",
-      this.occupiedGrids,
-      "Next grid: ",
-      nextGrid
-    );
+    // console.log(
+    //   "Occupied Grids: ",
+    //   this.occupiedGrids,
+    //   "Next grid: ",
+    //   nextGrid
+    // );
     this.moveToGrid(nextGrid, delta);
   }
 
@@ -434,9 +395,6 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   }
   // Check if the character has reached the target position
   hasReachedTarget(): boolean {
-    const { x: targetX, y: targetY } = this.calculateCenterPosition(
-      this.targetGrids
-    );
-    return Phaser.Math.Distance.Between(this.x, this.y, targetX, targetY) < 10;
+    return this.movingProgressRemaining <= 1; // or any small threshold
   }
 }
