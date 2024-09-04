@@ -152,16 +152,9 @@ export default class MainGameScene extends Phaser.Scene {
 
     // Initialize the player
     this.speed = utils.speed;
-    this.character = new Character(this, 5, 5, "Warrior_Blue", 128, this.grid);
+    this.character = new Character(this, 5, 5, "Warrior_Blue", this.grid);
     this.characters.push(this.character);
-    const character_2 = new Character(
-      this,
-      20,
-      5,
-      "Warrior_Blue",
-      128,
-      this.grid
-    );
+    const character_2 = new Character(this, 20, 5, "Warrior_Blue", this.grid);
     this.characters.push(character_2);
     // Initialize selected character as null
     this.selectedCharacter = null;
@@ -526,16 +519,14 @@ export default class MainGameScene extends Phaser.Scene {
   }
 
   // Helper function to visualize occupied grids
-  private visualizeOccupiedGrids(
-    grids: { x: number; y: number }[],
-    color: number
-  ) {
-    console.log("Visualizing grids:", grids);
+  visualizeOccupiedGrids(grids: { x: number; y: number }[], color: number) {
     this.debugGraphics.fillStyle(color, 0.3);
+
     grids.forEach((grid) => {
+      // console.log("Visualizing grid:", grid); // Log each grid being visualized
       this.debugGraphics.fillRect(
-        grid.x * this.cellSize,
-        grid.y * this.cellSize,
+        grid.x * this.cellSize, // Ensure this is the correct coordinate
+        grid.y * this.cellSize, // Ensure this is the correct coordinate
         this.cellSize,
         this.cellSize
       );
