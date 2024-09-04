@@ -28,6 +28,7 @@ export default class MainGameScene extends Phaser.Scene {
     /* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
+    this.characters;
 
     // Write your code here.
     /* END-USER-CTR-CODE */
@@ -354,6 +355,11 @@ export default class MainGameScene extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
+    // Update each character in the scene
+    this.characters.forEach((character) => {
+      character.update(delta);
+    });
+
     // Ensure delta is updated from the game loop
     delta = this.game.loop.delta;
     this.debugGraphics.clear();
