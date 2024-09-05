@@ -137,6 +137,10 @@ export default class MainGameScene extends Phaser.Scene {
   private selectedCharacter: Character | null = null; // Track selected character
   private actionManager!: SceneActionManager; // Declare the actionManager property
   private speed: number;
+  private isDragging: boolean = false; // Track whether dragging is active
+  private dragStartX: number = 0;
+private dragStartY: number = 0;
+
 
   create() {
     this.editorCreate();
@@ -199,8 +203,6 @@ export default class MainGameScene extends Phaser.Scene {
       if (this.selectedCharacter) {
         console.log("Melee attack!");
         this.selectedCharacter.attack(); // Call attack on the selected character
-        
-        
       }
     });
 
@@ -221,7 +223,7 @@ export default class MainGameScene extends Phaser.Scene {
       ) => {
         // Check if an action is currently playing
         if (!this.actionManager.isActionPlaying()) {
-          const zoomFactor = 0.001; // Adjust zoom sensitivity as needed
+          const zoomFactor = 0.01; // Adjust zoom sensitivity as needed
           const newZoom = Phaser.Math.Clamp(
             this.cameras.main.zoom - deltaY * zoomFactor,
             0.5,
@@ -235,6 +237,49 @@ export default class MainGameScene extends Phaser.Scene {
         }
       }
     ); // End of zoom controls
+
+    // Add pan controls with the middle mouse button
+    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.middleButtonDown()) {
+        this.isDragging = true; // Start dragging
+        this.dragStartX = pointer.x;
+        this.dragStartY = pointer.y;
+      }
+    });
+
+    this.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.middleButtonReleased()) {
+        this.isDragging = false; // Stop dragging
+      }
+    });
+
+    this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+      if (this.isDragging) {
+        // Calculate the difference in movement
+        const dragX = pointer.x - this.dragStartX;
+        const dragY = pointer.y - this.dragStartY;
+
+        // Move the camera by the inverse of the drag
+        this.cameras.main.scrollX -= dragX;
+        this.cameras.main.scrollY -= dragY;
+
+        // Clamp the camera within the world bounds (set by setBounds)
+        this.cameras.main.scrollX = Phaser.Math.Clamp(
+          this.cameras.main.scrollX,
+          0,
+          3840 - this.cameras.main.width
+        );
+        this.cameras.main.scrollY = Phaser.Math.Clamp(
+          this.cameras.main.scrollY,
+          0,
+          2160 - this.cameras.main.height
+        );
+
+        // Update drag start positions
+        this.dragStartX = pointer.x;
+        this.dragStartY = pointer.y;
+      }
+    });
 
     // STORY JSON CREATION
     const storyData = this.cache.json.entries.get("chapter_1.ink");
