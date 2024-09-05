@@ -16,7 +16,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   public targetGrids: { x: number; y: number }[] = [];
   private grid: Grid;
   private isActing: boolean = false; // Tracks if the character is acting
-  private speed: number = 10; // Movement speed in pixels per second
+  private speed: number = utils.speed; // Movement speed in pixels per second
   private movingProgressRemaining: number; // Track how much movement is left
 
   constructor(

@@ -181,14 +181,42 @@ export class SceneActionManager {
   // Move a character to a specific position over time
   private moveCharacterTo(
     character: Character,
-    targetGrids: { x: number; y: number }[], // Pass the array of target grids
+    targetGrids: { x: number; y: number }[],
     delta: number,
     callback?: ActionCallback
   ) {
-    character.moveToGrid(targetGrids, delta); // Pass the array directly
-    character.updateOccupiedGrids();
-    callback?.();
-    this.completeAction(delta);
+    // Set the character's target grids
+    character.setTargetGrids(targetGrids);
+    // Start the movement towards the grid
+    character.moveToGrid(targetGrids, delta);
+
+    // Check periodically if the movement is done
+    const checkMovementCompletion = () => {
+      if (character.hasReachedTarget()) {
+        console.log("Character has reached the target!");
+
+        // When movement is complete, update grids
+        character.updateOccupiedGrids();
+
+        // Call the callback if provided
+        if (callback) {
+          callback();
+        }
+
+        // Complete the action in the action manager
+        this.completeAction(delta);
+
+        // Stop the checking loop
+        this.scene.time.removeAllEvents();
+      }
+    };
+
+    // Use Phaser's built-in event timer to check periodically if the character has finished moving
+    this.scene.time.addEvent({
+      delay: 100, // Check every 100ms (adjust this interval as needed)
+      callback: checkMovementCompletion,
+      loop: true,
+    });
   }
 
   // Change the appearance of a character (e.g., swap textures)

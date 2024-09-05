@@ -280,13 +280,13 @@ export default class MainGameScene extends Phaser.Scene {
     );
 
     // Move the character to a specific position
-    // this.actionManager.queueAction(
-    //   new SceneAction("moveCharacterTo", {
-    //     character: character_2,
-    //     targetGrids: [{ x: 10, y: 20 }], // Ensure this is defined
-    //     delta: delta, // Ensure delta is provided
-    //   })
-    // );
+    this.actionManager.queueAction(
+      new SceneAction("moveCharacterTo", {
+        character: character_2,
+        targetGrids: [{ x: 20, y: 100 }], // Ensure this is defined
+        delta: delta, // Ensure delta is provided
+      })
+    );
 
     //
     //

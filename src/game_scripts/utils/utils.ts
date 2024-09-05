@@ -1,5 +1,5 @@
 // utils.ts
-export const speed = 10; // Speed constant
+export const speed = 20; // Speed constant
 // withGrid function
 export function withGrid(n: number): number {
   return n * 16;
