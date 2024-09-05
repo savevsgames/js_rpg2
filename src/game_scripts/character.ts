@@ -352,25 +352,15 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
   moveLeft(delta: number): void {
     this.setCharacterState(CharacterState.WALKING, { direction: "left" });
+    this.flipX = true; // Flip the character horizontally for left movement
     const nextGrid = utils.nextPosition(this.getOccupiedGrids(), "left");
-    // console.log(
-    //   "Occupied Grids: ",
-    //   this.occupiedGrids,
-    //   "Next grid: ",
-    //   nextGrid
-    // );
     this.moveToGrid(nextGrid, delta);
   }
 
   moveRight(delta: number): void {
     this.setCharacterState(CharacterState.WALKING, { direction: "right" });
+    this.flipX = false; // Reset the flip for right movement
     const nextGrid = utils.nextPosition(this.getOccupiedGrids(), "right");
-    // console.log(
-    //   "Occupied Grids: ",
-    //   this.occupiedGrids,
-    //   "Next grid: ",
-    //   nextGrid
-    // );
     this.moveToGrid(nextGrid, delta);
   }
 

@@ -28,89 +28,112 @@ import {
   selectCharacter,
   handlePointerDown,
 } from "../game_scripts/utils/SceneUtils";
+import { DesktopControls } from "../game_scripts/utils/DesktopControls";
+
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
+  constructor() {
+    super("MainGameScene");
 
-	constructor() {
-		super("MainGameScene");
-
-		/* START-USER-CTR-CODE */
+    /* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
     this.characters;
 
     // Write your code here.
     /* END-USER-CTR-CODE */
-	}
+  }
 
-	preload(): void {
+  preload(): void {
+    this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
+  }
 
-		this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
-	}
+  editorCreate(): void {
+    // test_castle
+    const test_castle = this.add.tilemap("test_castle");
+    test_castle.addTilesetImage(
+      "ShadowtideKeepEntranceMap_test_1",
+      "ShadowtideKeepEntranceMap_test_1"
+    );
 
-	editorCreate(): void {
+    // shadowtideKeepEntranceMap_test_1
+    this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
 
-		// test_castle
-		const test_castle = this.add.tilemap("test_castle");
-		test_castle.addTilesetImage("ShadowtideKeepEntranceMap_test_1", "ShadowtideKeepEntranceMap_test_1");
+    // tile_Layer
+    const tile_Layer = test_castle.createLayer(
+      "Tile Layer 1",
+      ["ShadowtideKeepEntranceMap_test_1"],
+      0,
+      0
+    )!;
 
-		// shadowtideKeepEntranceMap_test_1
-		this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
+    // mapgrass1
+    const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
+    mapgrass1.scaleX = 2;
+    mapgrass1.scaleY = 2;
 
-		// tile_Layer
-		const tile_Layer = test_castle.createLayer("Tile Layer 1", ["ShadowtideKeepEntranceMap_test_1"], 0, 0)!;
+    // fantasy_ship
+    this.add.image(1920, 1080, "fantasy_ship");
 
-		// mapgrass1
-		const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
-		mapgrass1.scaleX = 2;
-		mapgrass1.scaleY = 2;
+    // text_1
+    const text_1 = this.add.text(64, 64, "", {});
+    text_1.text = "SHADOWTIDE\nISLAND";
+    text_1.setStyle({
+      color: "#ceba96ff",
+      fontSize: "185px",
+      fontStyle: "bold",
+      stroke: "#000000ff",
+      strokeThickness: 10,
+      "shadow.offsetX": 13,
+      "shadow.offsetY": 8,
+      "shadow.blur": 5,
+      "shadow.fill": true,
+    });
 
-		// fantasy_ship
-		this.add.image(1920, 1080, "fantasy_ship");
+    // rectangle_1
+    const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
+    rectangle_1.scaleX = 6.9;
+    rectangle_1.scaleY = 12.1;
+    rectangle_1.isFilled = true;
+    rectangle_1.fillAlpha = 0.38;
+    rectangle_1.isStroked = true;
+    rectangle_1.strokeColor = 0;
+    rectangle_1.strokeAlpha = 0.42;
+    rectangle_1.lineWidth = 6.65;
 
-		// text_1
-		const text_1 = this.add.text(64, 64, "", {});
-		text_1.text = "SHADOWTIDE\nISLAND";
-		text_1.setStyle({ "color": "#ceba96ff", "fontSize": "185px", "fontStyle": "bold", "stroke": "#000000ff", "strokeThickness":10,"shadow.offsetX":13,"shadow.offsetY":8,"shadow.blur":5,"shadow.fill":true});
+    // shadowFx
+    rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
 
-		// rectangle_1
-		const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
-		rectangle_1.scaleX = 6.9;
-		rectangle_1.scaleY = 12.1;
-		rectangle_1.isFilled = true;
-		rectangle_1.fillAlpha = 0.38;
-		rectangle_1.isStroked = true;
-		rectangle_1.strokeColor = 0;
-		rectangle_1.strokeAlpha = 0.42;
-		rectangle_1.lineWidth = 6.65;
+    // text_2
+    const text_2 = this.add.text(144, 640, "", {});
+    text_2.text =
+      'Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with "m"\n\n- remove grid with "g"\n\nClick the story window or hit Enter to "turn the page" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.';
+    text_2.setStyle({
+      color: "#000000ff",
+      fontSize: "62px",
+      fontStyle: "bold",
+      maxLines: 61,
+    });
+    text_2.setWordWrapWidth(749);
 
-		// shadowFx
-		rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
+    // SignPost
+    const signPost = this.add.image(896, 592, "17");
+    signPost.scaleX = 2;
+    signPost.scaleY = 2;
 
-		// text_2
-		const text_2 = this.add.text(144, 640, "", {});
-		text_2.text = "Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with \"m\"\n\n- remove grid with \"g\"\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.";
-		text_2.setStyle({ "color": "#000000ff", "fontSize": "62px", "fontStyle": "bold", "maxLines":61});
-		text_2.setWordWrapWidth(749);
+    this.tile_Layer = tile_Layer;
+    this.rectangle_1 = rectangle_1;
+    this.test_castle = test_castle;
 
-		// SignPost
-		const signPost = this.add.image(896, 592, "17");
-		signPost.scaleX = 2;
-		signPost.scaleY = 2;
+    this.events.emit("scene-awake");
+  }
 
-		this.tile_Layer = tile_Layer;
-		this.rectangle_1 = rectangle_1;
-		this.test_castle = test_castle;
+  private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
+  private rectangle_1!: Phaser.GameObjects.Rectangle;
+  private test_castle!: Phaser.Tilemaps.Tilemap;
 
-		this.events.emit("scene-awake");
-	}
-
-	private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
-	private rectangle_1!: Phaser.GameObjects.Rectangle;
-	private test_castle!: Phaser.Tilemaps.Tilemap;
-
-	/* START-USER-CODE */
+  /* START-USER-CODE */
   private character!: Character;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private grid: Grid | null;
@@ -129,11 +152,38 @@ export default class MainGameScene extends Phaser.Scene {
   private isDragging: boolean = false; // Track whether dragging is active
   private dragStartX: number = 0;
   private dragStartY: number = 0;
+  private desktopControls: DesktopControls;
 
   create() {
     this.editorCreate();
 
     let delta = this.game.loop.delta;
+
+    // Define the cameraBounds for the world to allow the controls initialization
+    const cameraBounds = {
+      width: 3840, // Use the actual width of your world or scene
+      height: 2160, // Use the actual height of your world or scene
+    };
+
+    // Initialize DesktopControls
+    // Initialize DesktopControls and pass the scene
+    this.desktopControls = new DesktopControls(this);
+
+    // Call the setupInputs method to initialize input handling
+    this.desktopControls.setupInputs(
+      this.characters,
+      () => this.selectedCharacter, // Pass a function to get the current selected character
+      this.grid,
+      cameraBounds,
+      (character: Character | null) => {
+        this.selectedCharacter = character;
+        if (character) {
+          console.log("Character selected:", character.texture.key);
+        } else {
+          console.log("No character selected.");
+        }
+      }
+    );
 
     // Initialize debug graphics for visualizing occupied grids
     this.debugGraphics = this.add.graphics({
@@ -164,155 +214,6 @@ export default class MainGameScene extends Phaser.Scene {
 
     // CAMERA SETTINGS
     this.cameras.main.setBounds(0, 0, 3840, 2160);
-    // this.cameras.main.startFollow(this.player);
-    // Set up camera controls
-    this.cursors = this.input.keyboard!.createCursorKeys();
-    const controlConfig = {
-      camera: this.cameras.main,
-      left: this.cursors.left,
-      right: this.cursors.right,
-      up: this.cursors.up,
-      down: this.cursors.down,
-      acceleration: 0.06,
-      drag: 0.0005,
-      maxSpeed: 0.5,
-    };
-    this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
-      controlConfig
-    );
-
-    // INPUT HANDLING
-    this.input.keyboard?.on("keydown-G", () => {
-      this.grid?.toggle();
-    });
-
-    // Map the "M" key for melee attacks
-    this.input.keyboard?.on("keydown-M", () => {
-      if (this.selectedCharacter) {
-        console.log("Melee attack!");
-        this.selectedCharacter.attack(); // Call attack on the selected character
-      }
-    });
-
-    // Add a click handler to select the player character
-    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      handlePointerDown(
-        pointer,
-        this.cameras.main,
-        this.characters,
-        (character) => {
-          // We pass the callback here
-          this.selectedCharacter = character;
-          if (character) {
-            console.log("Character selected:", character.texture.key);
-          } else {
-            console.log("No character selected.");
-          }
-        }
-      );
-    });
-
-    // Add zoom controls using the mouse wheel
-    this.input.on(
-      "wheel",
-      (
-        pointer: Phaser.Input.Pointer,
-        gameObjects: any,
-        deltaX: number,
-        deltaY: number,
-        deltaZ: number
-      ) => {
-        // Determine the zoom factor based on scroll
-        const zoomFactor = 0.0005; // Adjust zoom sensitivity as needed
-        const newZoom = Phaser.Math.Clamp(
-          this.cameras.main.zoom - deltaY * zoomFactor,
-          0.5, // Minimum zoom level
-          1 // Maximum zoom level
-        );
-
-        // Get the current mouse position in world coordinates
-        const worldPoint = this.cameras.main.getWorldPoint(
-          pointer.x,
-          pointer.y
-        );
-
-        // Calculate the difference between the current world point and the camera's scroll position
-        const zoomX =
-          (worldPoint.x - this.cameras.main.scrollX) / this.cameras.main.zoom;
-        const zoomY =
-          (worldPoint.y - this.cameras.main.scrollY) / this.cameras.main.zoom;
-
-        // Apply the new zoom level
-        this.cameras.main.setZoom(newZoom);
-
-        // Adjust the camera’s scroll position based on the zoom target to keep the focus on the mouse pointer
-        this.cameras.main.scrollX = worldPoint.x - zoomX * newZoom;
-        this.cameras.main.scrollY = worldPoint.y - zoomY * newZoom;
-
-        // Clamp the camera's position to stay within world bounds, taking zoom into account
-        const maxScrollX = 3840 - this.cameras.main.width / newZoom;
-        const maxScrollY = 2160 - this.cameras.main.height / newZoom;
-
-        this.cameras.main.scrollX = Phaser.Math.Clamp(
-          this.cameras.main.scrollX,
-          0,
-          maxScrollX
-        );
-        this.cameras.main.scrollY = Phaser.Math.Clamp(
-          this.cameras.main.scrollY,
-          0,
-          maxScrollY
-        );
-      }
-    ); // End of zoom controls
-
-    // Add pan controls with the middle mouse button
-    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      if (pointer.middleButtonDown()) {
-        this.isDragging = true; // Start dragging
-        this.dragStartX = pointer.x;
-        this.dragStartY = pointer.y;
-      }
-    });
-
-    this.input.on("pointerup", (pointer: Phaser.Input.Pointer) => {
-      if (pointer.middleButtonReleased()) {
-        this.isDragging = false; // Stop dragging
-      }
-    });
-
-    this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-      if (this.isDragging) {
-        // Calculate the difference in movement
-        const dragX = pointer.x - this.dragStartX;
-        const dragY = pointer.y - this.dragStartY;
-
-        // Move the camera by the inverse of the drag, adjusted for zoom
-        this.cameras.main.scrollX -= dragX;
-        this.cameras.main.scrollY -= dragY;
-
-        // Clamp the camera within the world bounds (adjust for zoom level)
-        const maxScrollX =
-          3840 - this.cameras.main.width / this.cameras.main.zoom;
-        const maxScrollY =
-          2160 - this.cameras.main.height / this.cameras.main.zoom;
-
-        this.cameras.main.scrollX = Phaser.Math.Clamp(
-          this.cameras.main.scrollX,
-          0,
-          maxScrollX
-        );
-        this.cameras.main.scrollY = Phaser.Math.Clamp(
-          this.cameras.main.scrollY,
-          0,
-          maxScrollY
-        );
-
-        // Update drag start positions
-        this.dragStartX = pointer.x;
-        this.dragStartY = pointer.y;
-      }
-    });
 
     // STORY JSON CREATION
     const storyData = this.cache.json.entries.get("chapter_1.ink");
@@ -456,10 +357,13 @@ export default class MainGameScene extends Phaser.Scene {
     delta = this.game.loop.delta;
     this.debugGraphics.clear();
 
+    // Update desktop controls
+    this.desktopControls.update(delta);
+
     // Update camera controls
-    if (this.controls) {
-      this.controls.update(delta);
-    }
+    // if (this.controls) {
+    //   this.controls.update(delta);
+    // }
 
     // Update the grid, if present
     if (this.grid) {
@@ -498,7 +402,7 @@ export default class MainGameScene extends Phaser.Scene {
       console.log("No character selected.");
       this.debugGraphics.clear();
     }
-  }
+  } //  // End of update method
 
   // Handle input for character movement
   handleInput(delta: number): void {
