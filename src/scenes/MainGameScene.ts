@@ -23,105 +23,94 @@ import {
 } from "../../src/game_scripts/SceneAction";
 import { SceneActionManager } from "../../src/game_scripts/SceneActionManager";
 import speed from "../game_scripts/utils/utils";
+import {
+  visualizeOccupiedGrids,
+  selectCharacter,
+  handlePointerDown,
+} from "../game_scripts/utils/SceneUtils";
 /* END-USER-IMPORTS */
 
 export default class MainGameScene extends Phaser.Scene {
-  constructor() {
-    super("MainGameScene");
 
-    /* START-USER-CTR-CODE */
+	constructor() {
+		super("MainGameScene");
+
+		/* START-USER-CTR-CODE */
     this.grid = null;
     this.cellSize = 16;
     this.characters;
 
     // Write your code here.
     /* END-USER-CTR-CODE */
-  }
+	}
 
-  preload(): void {
-    this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
-  }
+	preload(): void {
 
-  editorCreate(): void {
-    // test_castle
-    const test_castle = this.add.tilemap("test_castle");
-    test_castle.addTilesetImage(
-      "ShadowtideKeepEntranceMap_test_1",
-      "ShadowtideKeepEntranceMap_test_1"
-    );
+		this.load.pack("preload-asset-pack", "assets/preload-asset-pack.json");
+	}
 
-    // shadowtideKeepEntranceMap_test_1
-    this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
+	editorCreate(): void {
 
-    // tile_Layer
-    const tile_Layer = test_castle.createLayer(
-      "Tile Layer 1",
-      ["ShadowtideKeepEntranceMap_test_1"],
-      0,
-      0
-    )!;
+		// test_castle
+		const test_castle = this.add.tilemap("test_castle");
+		test_castle.addTilesetImage("ShadowtideKeepEntranceMap_test_1", "ShadowtideKeepEntranceMap_test_1");
 
-    // mapgrass1
-    const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
-    mapgrass1.scaleX = 2;
-    mapgrass1.scaleY = 2;
+		// shadowtideKeepEntranceMap_test_1
+		this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
 
-    // fantasy_ship
-    this.add.image(1920, 1080, "fantasy_ship");
+		// tile_Layer
+		const tile_Layer = test_castle.createLayer("Tile Layer 1", ["ShadowtideKeepEntranceMap_test_1"], 0, 0)!;
 
-    // text_1
-    const text_1 = this.add.text(64, 64, "", {});
-    text_1.text = "SHADOWTIDE\nISLAND";
-    text_1.setStyle({
-      color: "#ceba96ff",
-      fontSize: "185px",
-      fontStyle: "bold",
-      stroke: "#000000ff",
-      strokeThickness: 10,
-      "shadow.offsetX": 13,
-      "shadow.offsetY": 8,
-      "shadow.blur": 5,
-      "shadow.fill": true,
-    });
+		// mapgrass1
+		const mapgrass1 = this.add.image(1920, 1080, "mapgrass1");
+		mapgrass1.scaleX = 2;
+		mapgrass1.scaleY = 2;
 
-    // rectangle_1
-    const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
-    rectangle_1.scaleX = 6.9;
-    rectangle_1.scaleY = 12.1;
-    rectangle_1.isFilled = true;
-    rectangle_1.fillAlpha = 0.38;
-    rectangle_1.isStroked = true;
-    rectangle_1.strokeColor = 0;
-    rectangle_1.strokeAlpha = 0.42;
-    rectangle_1.lineWidth = 6.65;
+		// fantasy_ship
+		this.add.image(1920, 1080, "fantasy_ship");
 
-    // shadowFx
-    rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
+		// text_1
+		const text_1 = this.add.text(64, 64, "", {});
+		text_1.text = "SHADOWTIDE\nISLAND";
+		text_1.setStyle({ "color": "#ceba96ff", "fontSize": "185px", "fontStyle": "bold", "stroke": "#000000ff", "strokeThickness":10,"shadow.offsetX":13,"shadow.offsetY":8,"shadow.blur":5,"shadow.fill":true});
 
-    // text_2
-    const text_2 = this.add.text(144, 640, "", {});
-    text_2.text =
-      'Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with "m"\n\n- remove grid with "g"\n\nClick the story window or hit Enter to "turn the page" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.';
-    text_2.setStyle({
-      color: "#000000ff",
-      fontSize: "62px",
-      fontStyle: "bold",
-      maxLines: 61,
-    });
-    text_2.setWordWrapWidth(749);
+		// rectangle_1
+		const rectangle_1 = this.add.rectangle(528, 1296, 128, 128);
+		rectangle_1.scaleX = 6.9;
+		rectangle_1.scaleY = 12.1;
+		rectangle_1.isFilled = true;
+		rectangle_1.fillAlpha = 0.38;
+		rectangle_1.isStroked = true;
+		rectangle_1.strokeColor = 0;
+		rectangle_1.strokeAlpha = 0.42;
+		rectangle_1.lineWidth = 6.65;
 
-    this.tile_Layer = tile_Layer;
-    this.rectangle_1 = rectangle_1;
-    this.test_castle = test_castle;
+		// shadowFx
+		rectangle_1.postFX!.addShadow(0, 0, 0.1, 1, 0, 6, 1);
 
-    this.events.emit("scene-awake");
-  }
+		// text_2
+		const text_2 = this.add.text(144, 640, "", {});
+		text_2.text = "Use the arrow keys to move the camera. \n\nSelect a token then:\n- move with W,A,S,D\n- melee attack with \"m\"\n\n- remove grid with \"g\"\n\nClick the story window or hit Enter to \"turn the page\" and make choices...\n\nKavan will not enjoy this journey at all, so I hope you can enjoy living in his shoes.";
+		text_2.setStyle({ "color": "#000000ff", "fontSize": "62px", "fontStyle": "bold", "maxLines":61});
+		text_2.setWordWrapWidth(749);
 
-  private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
-  private rectangle_1!: Phaser.GameObjects.Rectangle;
-  private test_castle!: Phaser.Tilemaps.Tilemap;
+		// SignPost
+		const signPost = this.add.image(896, 592, "17");
+		signPost.scaleX = 2;
+		signPost.scaleY = 2;
 
-  /* START-USER-CODE */
+		this.tile_Layer = tile_Layer;
+		this.rectangle_1 = rectangle_1;
+		this.test_castle = test_castle;
+
+		this.events.emit("scene-awake");
+	}
+
+	private tile_Layer!: Phaser.Tilemaps.TilemapLayer;
+	private rectangle_1!: Phaser.GameObjects.Rectangle;
+	private test_castle!: Phaser.Tilemaps.Tilemap;
+
+	/* START-USER-CODE */
   private character!: Character;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private grid: Grid | null;
@@ -207,7 +196,20 @@ export default class MainGameScene extends Phaser.Scene {
 
     // Add a click handler to select the player character
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      this.handlePointerDown(pointer);
+      handlePointerDown(
+        pointer,
+        this.cameras.main,
+        this.characters,
+        (character) => {
+          // We pass the callback here
+          this.selectedCharacter = character;
+          if (character) {
+            console.log("Character selected:", character.texture.key);
+          } else {
+            console.log("No character selected.");
+          }
+        }
+      );
     });
 
     // Add zoom controls using the mouse wheel
@@ -337,8 +339,13 @@ export default class MainGameScene extends Phaser.Scene {
       this.grid
     );
     this.character.updateOccupiedGrids();
-    this.visualizeOccupiedGrids(this.character.getOccupiedGrids(), 0x00ff00); // Current position in green
-    console.log("Occupied Grids:", this.character.getOccupiedGrids());
+    visualizeOccupiedGrids(
+      this.debugGraphics,
+      this.character.getOccupiedGrids(),
+      16,
+      0x00ff00
+    ); // Current position in green
+    // console.log("Occupied Grids:", this.character.getOccupiedGrids());
 
     // Add Music to the Scene
     // Initialize the background music
@@ -463,14 +470,16 @@ export default class MainGameScene extends Phaser.Scene {
     this.storyBox?.update();
 
     let activeScenePlaying = this.actionManager.isActionPlaying();
-    console.log("Active Scene Playing:", activeScenePlaying);
+    // console.log("Active Scene Playing:", activeScenePlaying);
 
     // Ensure that we have a selected character
     if (this.selectedCharacter) {
       // Visualize the occupied grids for the selected character
 
-      this.visualizeOccupiedGrids(
+      visualizeOccupiedGrids(
+        this.debugGraphics,
         this.selectedCharacter.getOccupiedGrids(),
+        16,
         0x00ff00
       ); // Green for selected character
 
@@ -523,7 +532,7 @@ export default class MainGameScene extends Phaser.Scene {
           direction
         );
 
-        console.log("Next Occupied Grids:", nextOccupiedGrids);
+        // console.log("Next Occupied Grids:", nextOccupiedGrids);
 
         // Check if any of the next occupied grids are blocked
         const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
@@ -563,51 +572,7 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 
-  // Handle pointer down event
-  handlePointerDown(pointer: Phaser.Input.Pointer) {
-    // Get the world coordinates of the pointer click
-    const worldPoint = pointer.positionToCamera(
-      this.cameras.main
-    ) as Phaser.Math.Vector2;
-
-    // Check if any character was clicked
-    const clickedCharacter = this.characters.find((character) => {
-      const bounds = character.getBounds();
-      return bounds.contains(worldPoint.x, worldPoint.y);
-    });
-
-    if (clickedCharacter) {
-      this.selectCharacter(clickedCharacter);
-    } else {
-      this.selectCharacter(null); // Deselect character
-    }
-  }
-
-  // Select a character
-  selectCharacter(character: Character | null) {
-    this.selectedCharacter = character;
-    if (character) {
-      console.log("Character selected:", character.texture.key);
-    } else {
-      console.log("No character selected.");
-    }
-  }
-
-  // Helper function to visualize occupied grids
-  visualizeOccupiedGrids(grids: { x: number; y: number }[], color: number) {
-    this.debugGraphics.fillStyle(color, 0.3);
-
-    grids.forEach((grid) => {
-      // console.log("Visualizing grid:", grid); // Log each grid being visualized
-      this.debugGraphics.fillRect(
-        grid.x * this.cellSize, // Ensure this is the correct coordinate
-        grid.y * this.cellSize, // Ensure this is the correct coordinate
-        this.cellSize,
-        this.cellSize
-      );
-    });
-  }
-
+  // Destroy the story box when the scene shuts down
   shutdown() {
     this.storyBox?.destroy();
     this.storyBox = null;

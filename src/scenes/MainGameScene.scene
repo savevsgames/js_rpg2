@@ -113,6 +113,18 @@
             "color": "#000000ff",
             "maxLines": 61,
             "wordWrapWidth": 749
+        },
+        {
+            "type": "Image",
+            "id": "4d91c827-4af5-4faf-9d32-d9df94ee32a6",
+            "label": "SignPost",
+            "texture": {
+                "key": "17"
+            },
+            "x": 896,
+            "y": 592,
+            "scaleX": 2,
+            "scaleY": 2
         }
     ],
     "plainObjects": [
