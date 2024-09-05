@@ -11,6 +11,7 @@ export enum CharacterState {
 
 export class Character extends Phaser.Physics.Arcade.Sprite {
   private currentState: CharacterState = CharacterState.IDLE;
+  private animationStateComplete: boolean = true;
   private stateData: any = {};
   public occupiedGrids: { x: number; y: number }[] = [];
   public targetGrids: { x: number; y: number }[] = [];
@@ -38,7 +39,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
     this.movingProgressRemaining;
 
     this.initializeAnimations();
-    this.setupEventListeners();
+    this.setupEventListeners(); // Event listener setup for animation completion
   }
 
   // Initialize animations for idle, walk, and attack states
@@ -60,7 +61,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
         frames: this.scene.anims.generateFrameNumbers("Warrior_Blue", {
           frames: [1, 7, 6, 7],
         }),
-        frameRate: 10,
+        frameRate: 30,
         repeat: -1,
       });
     }
@@ -71,7 +72,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
         frames: this.scene.anims.generateFrameNumbers("Warrior_Blue", {
           frames: [12, 13, 14, 15, 16, 17],
         }),
-        frameRate: 10,
+        frameRate: 30,
         repeat: 0,
       });
     }
@@ -85,7 +86,12 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   // Set player state and update animation accordingly
+  // Update character state and manage animation state flag
   setCharacterState(newState: CharacterState, data: any = {}): void {
+    if (newState === CharacterState.ATTACKING) {
+      this.animationStateComplete = false; // Animation starts, set to false
+    }
+
     this.currentState = newState;
     this.stateData = data;
     this.updateAnimation();
@@ -107,6 +113,7 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
         break;
       case CharacterState.ATTACKING:
         this.play("attack", true);
+        console.log("Attack animation started");
         break;
     }
   }
@@ -166,12 +173,24 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   update(delta: number): void {
+    // Prevent resetting state to IDLE if the animation is still running
+    if (
+      this.currentState === CharacterState.ATTACKING &&
+      !this.animationStateComplete
+    ) {
+      return; // Don't update if the attack animation hasn't finished
+    }
     // If moving progress is left, continue moving
     // console.log("Moving progress remaining:", this.movingProgressRemaining);
     if (this.movingProgressRemaining > 0) {
       this.updatePosition(delta);
+      // this.setIsActing(true); // Mark character as acting
+      this.setCharacterState(CharacterState.WALKING);
     } else {
-      // If no movement progress left, set to idle
+      // If no movement progress left and the State was WALKING [1], set to idle
+      if (this.currentState === CharacterState.WALKING) {
+        this.setCharacterState(CharacterState.IDLE);
+      }
       this.setCharacterState(CharacterState.IDLE);
     }
   }
@@ -366,6 +385,10 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
   private onAnimationComplete(animation: Phaser.Animations.Animation): void {
     if (animation.key === "attack") {
+      this.animationStateComplete = true; // Mark animation as complete
+      console.log("Attack animation complete!");
+
+      // Optionally reset to IDLE after attack
       this.setCharacterState(CharacterState.IDLE);
     }
   }

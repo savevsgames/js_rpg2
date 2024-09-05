@@ -12,6 +12,10 @@ import { StoryBoxConfig } from "../game_scripts/interfaces/StoryBoxConfig";
 import { DirectionInput } from "../game_scripts/utils/DirectionInput";
 import { CollisionChecker } from "../game_scripts/utils/CollisionChecker";
 import * as inkjs from "inkjs";
+import {
+  handleTransition,
+  TransitionConfig,
+} from "../game_scripts/SceneTransition";
 // Add SceneActionManager to the Scene
 import {
   SceneAction,
@@ -189,17 +193,22 @@ export default class MainGameScene extends Phaser.Scene {
     this.input.keyboard?.on("keydown-G", () => {
       this.grid?.toggle();
     });
+
     // Map the "M" key for melee attacks
     this.input.keyboard?.on("keydown-M", () => {
       if (this.selectedCharacter) {
+        console.log("Melee attack!");
         this.selectedCharacter.attack(); // Call attack on the selected character
+        
+        
       }
     });
+
     // Add a click handler to select the player character
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       this.handlePointerDown(pointer);
     });
-    // this.input.on("pointerdown", () => this.player.attack());
+
     // Add zoom controls using the mouse wheel
     this.input.on(
       "wheel",
@@ -225,7 +234,7 @@ export default class MainGameScene extends Phaser.Scene {
           this.actionManager.queueAction(zoomAction);
         }
       }
-    );
+    ); // End of zoom controls
 
     // STORY JSON CREATION
     const storyData = this.cache.json.entries.get("chapter_1.ink");
@@ -406,6 +415,7 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 
+  // Handle input for character movement
   handleInput(delta: number): void {
     // Get the current direction from DirectionInput
     const direction = this.directionInput.direction;
@@ -457,6 +467,18 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 
+  // Use the transition function with config
+  triggerSceneChange() {
+    const config: TransitionConfig = {
+      targetScene: "NewScene",
+      duration: 1500,
+      fadeColor: 0xff0000,
+      callback: () => console.log("Scene transition completed!"),
+    };
+
+    handleTransition(this, config);
+  }
+
   // Update camera bounds when screen moves
   updateCameraBounds(x: number, y: number, width: number, height: number) {
     this.cameras.main.setBounds(x, y, width, height);
@@ -465,37 +487,7 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 
-  // Helper function to calculate the center of occupied grids and return world coordinates
-  // calculateCenterPosition(grids: { x: number; y: number }[]): {
-  //   x: number;
-  //   y: number;
-  // } {
-  //   if (grids.length === 0) {
-  //     console.error("Grids array is empty.");
-  //     return { x: 0, y: 0 };
-  //   }
-
-  //   // Assume grids are all in the same size, and we already know the player's grid is centered
-  //   const firstGrid = grids[0];
-
-  //   // Calculate the top-left corner of the grid in world coordinates
-  //   const topLeftX = firstGrid.x * this.cellSize;
-  //   const topLeftY = firstGrid.y * this.cellSize;
-
-  //   // Calculate the center by adding half the player's width and height
-  //   const centerX =
-  //     topLeftX + (this.character.width * this.character.scaleX) / 2;
-  //   const centerY =
-  //     topLeftY + (this.character.height * this.character.scaleY) / 2;
-
-  //   console.log(`Grid Center World Coords: (${centerX}, ${centerY})`);
-
-  //   return {
-  //     x: Math.floor(centerX / this.cellSize),
-  //     y: Math.floor(centerY / this.cellSize),
-  //   };
-  // }
-
+  // Handle pointer down event
   handlePointerDown(pointer: Phaser.Input.Pointer) {
     // Get the world coordinates of the pointer click
     const worldPoint = pointer.positionToCamera(
@@ -515,6 +507,7 @@ export default class MainGameScene extends Phaser.Scene {
     }
   }
 
+  // Select a character
   selectCharacter(character: Character | null) {
     this.selectedCharacter = character;
     if (character) {
