@@ -139,8 +139,7 @@ export default class MainGameScene extends Phaser.Scene {
   private speed: number;
   private isDragging: boolean = false; // Track whether dragging is active
   private dragStartX: number = 0;
-private dragStartY: number = 0;
-
+  private dragStartY: number = 0;
 
   create() {
     this.editorCreate();
@@ -221,20 +220,47 @@ private dragStartY: number = 0;
         deltaY: number,
         deltaZ: number
       ) => {
-        // Check if an action is currently playing
-        if (!this.actionManager.isActionPlaying()) {
-          const zoomFactor = 0.01; // Adjust zoom sensitivity as needed
-          const newZoom = Phaser.Math.Clamp(
-            this.cameras.main.zoom - deltaY * zoomFactor,
-            0.5,
-            2
-          );
+        // Determine the zoom factor based on scroll
+        const zoomFactor = 0.0005; // Adjust zoom sensitivity as needed
+        const newZoom = Phaser.Math.Clamp(
+          this.cameras.main.zoom - deltaY * zoomFactor,
+          0.5, // Minimum zoom level
+          1 // Maximum zoom level
+        );
 
-          // Use the action manager to queue the zoom action
-          const zoomAction = new SceneAction("zoomCamera", { zoom: newZoom });
+        // Get the current mouse position in world coordinates
+        const worldPoint = this.cameras.main.getWorldPoint(
+          pointer.x,
+          pointer.y
+        );
 
-          this.actionManager.queueAction(zoomAction);
-        }
+        // Calculate the difference between the current world point and the camera's scroll position
+        const zoomX =
+          (worldPoint.x - this.cameras.main.scrollX) / this.cameras.main.zoom;
+        const zoomY =
+          (worldPoint.y - this.cameras.main.scrollY) / this.cameras.main.zoom;
+
+        // Apply the new zoom level
+        this.cameras.main.setZoom(newZoom);
+
+        // Adjust the camera’s scroll position based on the zoom target to keep the focus on the mouse pointer
+        this.cameras.main.scrollX = worldPoint.x - zoomX * newZoom;
+        this.cameras.main.scrollY = worldPoint.y - zoomY * newZoom;
+
+        // Clamp the camera's position to stay within world bounds, taking zoom into account
+        const maxScrollX = 3840 - this.cameras.main.width / newZoom;
+        const maxScrollY = 2160 - this.cameras.main.height / newZoom;
+
+        this.cameras.main.scrollX = Phaser.Math.Clamp(
+          this.cameras.main.scrollX,
+          0,
+          maxScrollX
+        );
+        this.cameras.main.scrollY = Phaser.Math.Clamp(
+          this.cameras.main.scrollY,
+          0,
+          maxScrollY
+        );
       }
     ); // End of zoom controls
 
@@ -259,20 +285,25 @@ private dragStartY: number = 0;
         const dragX = pointer.x - this.dragStartX;
         const dragY = pointer.y - this.dragStartY;
 
-        // Move the camera by the inverse of the drag
+        // Move the camera by the inverse of the drag, adjusted for zoom
         this.cameras.main.scrollX -= dragX;
         this.cameras.main.scrollY -= dragY;
 
-        // Clamp the camera within the world bounds (set by setBounds)
+        // Clamp the camera within the world bounds (adjust for zoom level)
+        const maxScrollX =
+          3840 - this.cameras.main.width / this.cameras.main.zoom;
+        const maxScrollY =
+          2160 - this.cameras.main.height / this.cameras.main.zoom;
+
         this.cameras.main.scrollX = Phaser.Math.Clamp(
           this.cameras.main.scrollX,
           0,
-          3840 - this.cameras.main.width
+          maxScrollX
         );
         this.cameras.main.scrollY = Phaser.Math.Clamp(
           this.cameras.main.scrollY,
           0,
-          2160 - this.cameras.main.height
+          maxScrollY
         );
 
         // Update drag start positions
