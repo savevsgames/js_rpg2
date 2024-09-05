@@ -1,3 +1,5 @@
+import Grid from "../utils/grid";
+
 // utils.ts
 export const speed = 20; // Speed constant
 // withGrid function
@@ -102,6 +104,14 @@ export function calculateWorldBounds(
   return { topLeft, bottomRight };
 }
 
+// Create Grid export function
+export function createGrid(scene: Phaser.Scene, cellSize: number = 16) {
+  // Create the grid object (based on your earlier grid setup)
+  const grid = new Grid(scene, cellSize);
+  grid.draw(); // Assuming draw will initialize the grid based on the world bounds
+  return grid;
+}
+
 // If you want to maintain the ability to import all functions as a single object:
 export default {
   withGrid,
@@ -112,5 +122,6 @@ export default {
   calculateWorldBounds,
   withOutGrid_RndDown,
   withOutGrid_RndUp,
+  createGrid,
   speed,
 };

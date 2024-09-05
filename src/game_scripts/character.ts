@@ -198,38 +198,48 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   // Move the character to target grids
   moveToGrid(targetGrids: { x: number; y: number }[], delta: number) {
     if (this.isActing) return; // If already acting, don't trigger another movement
-    this.setIsActing(true); // Mark character as acting
+
     // console.log("Moving to grid:", targetGrids);
 
-    // Calculate the target position based on the center of the target grids
-    // This will return 4,4 for a character that occupies 8x8 grid space
-    const singleGidInCenterOfTargetGrids =
-      this.calculateCenterPosition(targetGrids);
-    // console.log(
-    //   "Choose a single grid in the center of the target grids :",
-    //   singleGidInCenterOfTargetGrids
-    // );
-    // top left grid in target grids
-    const topLeftGrid = targetGrids[0];
-    // top left x and y
-    const topLeftX = withGrid(topLeftGrid.x);
-    const topLeftY = withGrid(topLeftGrid.y);
+    const worldWidth = this.scene.physics.world.bounds.width;
+    const worldHeight = this.scene.physics.world.bounds.height;
 
-    // calculate size of singleGridInCenterOfTargetGrids in pixels
-    const x_offset = withGrid(singleGidInCenterOfTargetGrids.x);
-    const y_offset = withGrid(singleGidInCenterOfTargetGrids.y);
+    // Check if the next grid positions are within bounds
+    if (this.isWithinWorldBounds(targetGrids, worldWidth, worldHeight)) {
+      // Proceed with movement logic if within bounds
+      this.setIsActing(true); // Mark character as acting
+      // Calculate the target position based on the center of the target grids
+      // This will return 4,4 for a character that occupies 8x8 grid space
+      const singleGidInCenterOfTargetGrids =
+        this.calculateCenterPosition(targetGrids);
+      // console.log(
+      //   "Choose a single grid in the center of the target grids :",
+      //   singleGidInCenterOfTargetGrids
+      // );
+      // top left grid in target grids
+      const topLeftGrid = targetGrids[0];
+      // top left x and y
+      const topLeftX = withGrid(topLeftGrid.x);
+      const topLeftY = withGrid(topLeftGrid.y);
 
-    // use x and y offsets to add to top left x and y to get the center of the target grids
-    const targetX = topLeftX + x_offset;
-    const targetY = topLeftY + y_offset;
+      // calculate size of singleGridInCenterOfTargetGrids in pixels
+      const x_offset = withGrid(singleGidInCenterOfTargetGrids.x);
+      const y_offset = withGrid(singleGidInCenterOfTargetGrids.y);
 
-    // Debug log to check target calculations
-    // console.log(
-    //   `Moving character from (${this.x}, ${this.y}) to (${targetX}, ${targetY})`
-    // );
+      // use x and y offsets to add to top left x and y to get the center of the target grids
+      const targetX = topLeftX + x_offset;
+      const targetY = topLeftY + y_offset;
 
-    // Now, move the character to the calculated position
-    this.moveToPosition(targetX, targetY, delta);
+      // Debug log to check target calculations
+      // console.log(
+      //   `Moving character from (${this.x}, ${this.y}) to (${targetX}, ${targetY})`
+      // );
+
+      // Now, move the character to the calculated position
+      this.moveToPosition(targetX, targetY, delta);
+    } else {
+      console.log("Movement blocked: outside world bounds");
+    }
   }
 
   // Update the character's position as they move towards the target
@@ -277,6 +287,10 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
 
   // Getter for the target position based on the target grids
   private getTargetPosition(): { x: number; y: number } {
+    if (!this.targetGrids || this.targetGrids.length === 0) {
+      console.error("Target grids are empty or undefined.");
+      return { x: this.x, y: this.y }; // Fallback to current position
+    }
     // This function will be sent target grid coordinates
     // We need to turn those into world coordinates, then account for the character's size by creating a grid offset using calculateCenterPosition
     // ex. For a character that is 8x8 grid size, the center of the grid is 4,4
@@ -287,7 +301,9 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
     const { x: offsetX, y: offsetY } = this.calculateCenterPosition(
       this.targetGrids
     );
+    // Debugging log for targetGrids
     // console.log("Target offset:", offsetX, offsetY);
+    console.log("targetGrids: ", this.targetGrids);
 
     // top left grid in target grids
     const topLeftGrid = this.targetGrids[0];
@@ -409,5 +425,22 @@ export class Character extends Phaser.Physics.Arcade.Sprite {
   // Check if the character has reached the target position
   hasReachedTarget(): boolean {
     return this.movingProgressRemaining <= 1; // or any small threshold
+  }
+
+  isWithinWorldBounds(
+    nextGrids: { x: number; y: number }[],
+    worldWidth: number,
+    worldHeight: number
+  ): boolean {
+    return nextGrids.every((grid) => {
+      const worldX = withGrid(grid.x);
+      const worldY = withGrid(grid.y);
+      return (
+        worldX >= 0 &&
+        worldX < worldWidth &&
+        worldY >= 0 &&
+        worldY < worldHeight
+      );
+    });
   }
 }

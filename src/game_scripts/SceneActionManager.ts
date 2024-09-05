@@ -185,6 +185,11 @@ export class SceneActionManager {
     delta: number,
     callback?: ActionCallback
   ) {
+    // Check if targetGrids is properly defined
+    if (!targetGrids || targetGrids.length === 0) {
+      console.error("No valid target grids to move to.");
+      return;
+    }
     // Set the character's target grids
     character.setTargetGrids(targetGrids);
     // Start the movement towards the grid

@@ -165,17 +165,42 @@ export default class MainGameScene extends Phaser.Scene {
       height: 2160, // Use the actual height of your world or scene
     };
 
-    // Initialize DesktopControls
-    // Initialize DesktopControls and pass the scene
-    this.desktopControls = new DesktopControls(this);
+    // Set the world bounds
+    this.physics.world.setBounds(0, 0, 3840, 2160);
+
+    // set the world bounds to collide
+    this.physics.world.setBoundsCollision(true, true, true, true);
+
+    // Create the grid
+    this.grid = new Grid(this, this.cellSize);
+
+    if (!this.grid) {
+      console.log("Grid does not exist. Creating a new one from utils.");
+      this.grid = utils.createGrid(this, 16); // Assuming 16 is your grid cell size, adjust as needed
+    }
+
+    this.collisionChecker = new CollisionChecker(
+      this,
+      this.tile_Layer,
+      this.grid,
+      this.physics.world.bounds.width,
+      this.physics.world.bounds.height
+    );
+
+    // Proceed to initialize the DesktopControls
+    this.desktopControls = new DesktopControls(
+      this,
+      this.directionInput,
+      this.collisionChecker
+    );
 
     // Call the setupInputs method to initialize input handling
     this.desktopControls.setupInputs(
       this.characters,
-      () => this.selectedCharacter, // Pass a function to get the current selected character
       this.grid,
-      cameraBounds,
+      { width: 3840, height: 2160 }, // Example camera bounds
       (character: Character | null) => {
+        // Update the selected character when it's changed
         this.selectedCharacter = character;
         if (character) {
           console.log("Character selected:", character.texture.key);
@@ -190,12 +215,6 @@ export default class MainGameScene extends Phaser.Scene {
       lineStyle: { width: 1, color: 0xff0000, alpha: 0.8 },
       fillStyle: { color: 0xff0000, alpha: 0.3 },
     });
-
-    // Set the world bounds
-    this.physics.world.setBounds(0, 0, 3840, 2160);
-
-    // Create the grid
-    this.grid = new Grid(this, this.cellSize);
 
     // Initialize the player
     this.speed = utils.speed;
@@ -233,12 +252,7 @@ export default class MainGameScene extends Phaser.Scene {
 
     this.displayInkContent(inkStory);
 
-    // Initialize Collision Checker
-    this.collisionChecker = new CollisionChecker(
-      this,
-      this.tile_Layer,
-      this.grid
-    );
+    // Initialize Occupied Grids Visualization
     this.character.updateOccupiedGrids();
     visualizeOccupiedGrids(
       this.debugGraphics,
@@ -290,7 +304,7 @@ export default class MainGameScene extends Phaser.Scene {
    * @param inkStory
    *
    */
-  // Add the displayInkContent method inside your MainGameScene class
+  // DisplayInkContent
   displayInkContent(inkStory: inkjs.Story): void {
     let storyContent: string[] = [];
 
@@ -358,7 +372,8 @@ export default class MainGameScene extends Phaser.Scene {
     this.debugGraphics.clear();
 
     // Update desktop controls
-    this.desktopControls.update(delta);
+    this.desktopControls.handleInput(delta); // Move the character based on inputs
+    this.desktopControls.update(delta); // Handle camera movement and updates
 
     // Update camera controls
     // if (this.controls) {
@@ -389,7 +404,7 @@ export default class MainGameScene extends Phaser.Scene {
 
       // Handle input and character movement if no scene action is active
       if (!activeScenePlaying) {
-        this.handleInput(delta);
+        this.desktopControls.handleInput(delta);
       }
 
       // The character class handles movement and state updates internally.
@@ -405,56 +420,56 @@ export default class MainGameScene extends Phaser.Scene {
   } //  // End of update method
 
   // Handle input for character movement
-  handleInput(delta: number): void {
-    // Get the current direction from DirectionInput
-    const direction = this.directionInput.direction;
-    if (this.selectedCharacter) {
-      // Only allow movement if the selected character is idle
-      if (
-        direction &&
-        this.selectedCharacter.getCharacterState() === CharacterState.IDLE
-      ) {
-        switch (direction) {
-          case "up":
-            this.selectedCharacter.moveUp(delta);
-            break;
-          case "down":
-            this.selectedCharacter.moveDown(delta);
-            break;
-          case "left":
-            this.selectedCharacter.moveLeft(delta);
-            break;
-          case "right":
-            this.selectedCharacter.moveRight(delta);
-            break;
-        }
+  // handleInput(delta: number): void {
+  //   // Get the current direction from DirectionInput
+  //   const direction = this.directionInput.direction;
+  //   if (this.selectedCharacter) {
+  //     // Only allow movement if the selected character is idle
+  //     if (
+  //       direction &&
+  //       this.selectedCharacter.getCharacterState() === CharacterState.IDLE
+  //     ) {
+  //       switch (direction) {
+  //         case "up":
+  //           this.selectedCharacter.moveUp(delta);
+  //           break;
+  //         case "down":
+  //           this.selectedCharacter.moveDown(delta);
+  //           break;
+  //         case "left":
+  //           this.selectedCharacter.moveLeft(delta);
+  //           break;
+  //         case "right":
+  //           this.selectedCharacter.moveRight(delta);
+  //           break;
+  //       }
 
-        // Calculate the next occupied grids for the character
-        const characterLocation = this.selectedCharacter.getOccupiedGrids();
-        let nextOccupiedGrids = utils.nextPosition(
-          characterLocation,
-          direction
-        );
+  //       // Calculate the next occupied grids for the character
+  //       const characterLocation = this.selectedCharacter.getOccupiedGrids();
+  //       let nextOccupiedGrids = utils.nextPosition(
+  //         characterLocation,
+  //         direction
+  //       );
 
-        // console.log("Next Occupied Grids:", nextOccupiedGrids);
+  //       // console.log("Next Occupied Grids:", nextOccupiedGrids);
 
-        // Check if any of the next occupied grids are blocked
-        const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
-        console.log("Can Move:", canMove);
+  //       // Check if any of the next occupied grids are blocked
+  //       const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
+  //       console.log("Can Move:", canMove);
 
-        if (canMove) {
-          // Set the selected character's target grid for movement
-          this.selectedCharacter.setTargetGrids(nextOccupiedGrids);
-          this.selectedCharacter.setIsActing(true);
-        } else {
-          console.log("Movement blocked.");
-          this.selectedCharacter.stopMoving();
-        }
-      }
-    } else {
-      console.log("No character selected.");
-    }
-  }
+  //       if (canMove) {
+  //         // Set the selected character's target grid for movement
+  //         this.selectedCharacter.setTargetGrids(nextOccupiedGrids);
+  //         this.selectedCharacter.setIsActing(true);
+  //       } else {
+  //         console.log("Movement blocked.");
+  //         this.selectedCharacter.stopMoving();
+  //       }
+  //     }
+  //   } else {
+  //     console.log("No character selected.");
+  //   }
+  // }
 
   // Use the transition function with config
   triggerSceneChange() {

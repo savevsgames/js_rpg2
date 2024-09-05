@@ -1,5 +1,7 @@
-import { Character } from "../character";
+import { Character, CharacterState } from "../character";
 import Phaser from "phaser";
+import utils from "../utils/utils";
+import { CollisionChecker } from "./CollisionChecker";
 
 export class DesktopControls {
   private scene: Phaser.Scene;
@@ -8,26 +10,32 @@ export class DesktopControls {
   private dragStartX: number = 0;
   private dragStartY: number = 0;
   private controls: Phaser.Cameras.Controls.SmoothedKeyControl | undefined;
+  private directionInput: any; // Assuming you have a `DirectionInput` class
+  private selectedCharacter: Character | null = null; // Default null, can be selected later
+  private collisionChecker: CollisionChecker; // You might want to type this as your `CollisionChecker`
 
-  constructor(scene: Phaser.Scene) {
+  constructor(
+    scene: Phaser.Scene,
+    directionInput: any,
+    collisionChecker: CollisionChecker
+  ) {
     this.scene = scene;
+    this.directionInput = directionInput;
+    this.collisionChecker = collisionChecker;
   }
 
   setupInputs(
     characters: Character[],
-    getSelectedCharacter: () => Character | null, // Pass a function to always get the latest selected character
     grid: any,
     cameraBounds: { width: number; height: number },
     onCharacterSelected: (character: Character | null) => void
   ) {
-    this.setupKeyboardInputs(getSelectedCharacter, grid);
+    // Setup keyboard and mouse inputs
+    this.setupKeyboardInputs(grid);
     this.setupMouseInputs(characters, onCharacterSelected, cameraBounds);
   }
 
-  private setupKeyboardInputs(
-    getSelectedCharacter: () => Character | null, 
-    grid: any
-  ) {
+  private setupKeyboardInputs(grid: any) {
     // Set up arrow keys and WASD
     this.cursors = this.scene.input.keyboard!.createCursorKeys();
     const controlConfig = {
@@ -40,28 +48,26 @@ export class DesktopControls {
       drag: 0.0005,
       maxSpeed: 0.5,
     };
-  
+
     this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
       controlConfig
     );
-  
+
     // Toggle grid
     this.scene.input.keyboard?.on("keydown-G", () => {
       grid?.toggle();
     });
-  
-    // Melee attack with "M"
+
+    // Melee attack with "M" only if a character is selected
     this.scene.input.keyboard?.on("keydown-M", () => {
-      const selectedCharacter = getSelectedCharacter();
-      if (selectedCharacter) {
+      if (this.selectedCharacter) {
         console.log("Melee attack!");
-        selectedCharacter.attack();
+        this.selectedCharacter.attack();
       } else {
         console.log("No character selected for attack.");
       }
     });
   }
-  
 
   private setupMouseInputs(
     characters: Character[],
@@ -131,8 +137,32 @@ export class DesktopControls {
 
     if (clickedCharacter) {
       onCharacterSelected(clickedCharacter);
+      this.selectedCharacter = clickedCharacter;
+
+      // Make sure the newly selected character's grids are updated
+      this.selectedCharacter.updateOccupiedGrids();
+
+      console.log("Character selected:", this.selectedCharacter.texture.key);
+
+      // Check if collision checker is properly set up
+      if (!this.collisionChecker) {
+        console.error("CollisionChecker is not initialized.");
+      } else {
+        // Debugging: check if the selected character has valid target grids
+        if (
+          !this.selectedCharacter.targetGrids ||
+          this.selectedCharacter.targetGrids.length === 0
+        ) {
+          console.warn(
+            "Selected character has no target grids or target grids are invalid."
+          );
+        }
+      }
     } else {
+      // If no character is clicked, clear selection
       onCharacterSelected(null);
+      this.selectedCharacter = null;
+      console.log("No character selected.");
     }
   }
 
@@ -207,6 +237,65 @@ export class DesktopControls {
       0,
       maxScrollY
     );
+  }
+
+  // Move the character based on input direction
+  handleInput(delta: number): void {
+    // Get the current direction from DirectionInput
+    const direction = this.directionInput.direction;
+
+    if (this.selectedCharacter) {
+      // Only allow movement if the selected character is idle
+      if (
+        direction &&
+        this.selectedCharacter.getCharacterState() === CharacterState.IDLE
+      ) {
+        switch (direction) {
+          case "up":
+            this.selectedCharacter.moveUp(delta);
+            break;
+          case "down":
+            this.selectedCharacter.moveDown(delta);
+            break;
+          case "left":
+            this.selectedCharacter.moveLeft(delta);
+            break;
+          case "right":
+            this.selectedCharacter.moveRight(delta);
+            break;
+        }
+
+        // Calculate the next occupied grids for the character
+        const characterLocation = this.selectedCharacter.getOccupiedGrids();
+        let nextOccupiedGrids = utils.nextPosition(
+          characterLocation,
+          direction
+        );
+
+        if (this.collisionChecker && this.selectedCharacter) {
+          const canMove =
+            this.collisionChecker.isPositionFree(nextOccupiedGrids);
+          console.log("Can move: ", canMove);
+
+          if (canMove) {
+            // Set the selected character's target grid for movement
+            this.selectedCharacter.setTargetGrids(nextOccupiedGrids);
+            console.log(
+              "Selected Character Target Grids: ",
+              this.selectedCharacter.targetGrids
+            );
+            this.selectedCharacter.setIsActing(true);
+          } else {
+            console.log("Movement blocked.");
+            this.selectedCharacter.stopMoving();
+          }
+        } else {
+          console.warn(
+            "CollisionChecker or selectedCharacter is not initialized"
+          );
+        }
+      }
+    }
   }
 
   update(delta: number) {
