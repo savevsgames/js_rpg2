@@ -29,6 +29,8 @@ import {
   handlePointerDown,
 } from "../game_scripts/utils/SceneUtils";
 import { DesktopControls } from "../game_scripts/utils/DesktopControls";
+import { InteractiveChecker } from "../game_scripts/InteractiveChecker";
+import SceneManager from "../game_scripts/SceneManager";
 
 /* END-USER-IMPORTS */
 
@@ -153,6 +155,8 @@ export default class MainGameScene extends Phaser.Scene {
   private dragStartX: number = 0;
   private dragStartY: number = 0;
   private desktopControls: DesktopControls;
+  private interactiveChecker: InteractiveChecker;
+  private sceneManager: SceneManager;
 
   create() {
     this.editorCreate();
@@ -295,6 +299,29 @@ export default class MainGameScene extends Phaser.Scene {
       })
     );
 
+    // Interactive Checker for Scene Transitions and Interactive Grid Space Triggered Scene Actions
+    // Create SceneManager instance
+    this.sceneManager = new SceneManager(this);
+
+    // Pass sceneManager instance to InteractiveChecker
+    this.interactiveChecker = new InteractiveChecker(
+      this,
+      this.grid,
+      this.actionManager,
+      this.sceneManager
+    );
+
+    // Add teleporters
+    this.interactiveChecker.addTeleporter(10, 10, "newMap", "newTileset");
+
+    // Add interactions
+    this.interactiveChecker.addInteraction(5, 5, () => {
+      console.log("Triggered interaction!");
+      this.actionManager.queueAction(
+        new SceneAction("displayPopup", { text: "Hello!" })
+      );
+    });
+
     //
     //
   } // End of create method
@@ -420,61 +447,63 @@ export default class MainGameScene extends Phaser.Scene {
   } //  // End of update method
 
   // Handle input for character movement
-  // handleInput(delta: number): void {
-  //   // Get the current direction from DirectionInput
-  //   const direction = this.directionInput.direction;
-  //   if (this.selectedCharacter) {
-  //     // Only allow movement if the selected character is idle
-  //     if (
-  //       direction &&
-  //       this.selectedCharacter.getCharacterState() === CharacterState.IDLE
-  //     ) {
-  //       switch (direction) {
-  //         case "up":
-  //           this.selectedCharacter.moveUp(delta);
-  //           break;
-  //         case "down":
-  //           this.selectedCharacter.moveDown(delta);
-  //           break;
-  //         case "left":
-  //           this.selectedCharacter.moveLeft(delta);
-  //           break;
-  //         case "right":
-  //           this.selectedCharacter.moveRight(delta);
-  //           break;
-  //       }
+  handleInput(delta: number): void {
+    // Get the current direction from DirectionInput
+    const direction = this.directionInput.direction;
+    if (this.selectedCharacter) {
+      // Only allow movement if the selected character is idle
+      if (
+        direction &&
+        this.selectedCharacter.getCharacterState() === CharacterState.IDLE
+      ) {
+        switch (direction) {
+          case "up":
+            this.selectedCharacter.moveUp(delta);
+            break;
+          case "down":
+            this.selectedCharacter.moveDown(delta);
+            break;
+          case "left":
+            this.selectedCharacter.moveLeft(delta);
+            break;
+          case "right":
+            this.selectedCharacter.moveRight(delta);
+            break;
+        }
 
-  //       // Calculate the next occupied grids for the character
-  //       const characterLocation = this.selectedCharacter.getOccupiedGrids();
-  //       let nextOccupiedGrids = utils.nextPosition(
-  //         characterLocation,
-  //         direction
-  //       );
+        // Calculate the next occupied grids for the character
+        const characterLocation = this.selectedCharacter.getOccupiedGrids();
+        let nextOccupiedGrids = utils.nextPosition(
+          characterLocation,
+          direction
+        );
 
-  //       // console.log("Next Occupied Grids:", nextOccupiedGrids);
+        // console.log("Next Occupied Grids:", nextOccupiedGrids);
+        // First, check if there's a teleporter or interaction in the next grid
+        this.interactiveChecker.checkGridInteractions(nextOccupiedGrids);
 
-  //       // Check if any of the next occupied grids are blocked
-  //       const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
-  //       console.log("Can Move:", canMove);
+        // Check if any of the next occupied grids are blocked
+        const canMove = this.collisionChecker.isPositionFree(nextOccupiedGrids);
+        console.log("Can Move:", canMove);
 
-  //       if (canMove) {
-  //         // Set the selected character's target grid for movement
-  //         this.selectedCharacter.setTargetGrids(nextOccupiedGrids);
-  //         this.selectedCharacter.setIsActing(true);
-  //       } else {
-  //         console.log("Movement blocked.");
-  //         this.selectedCharacter.stopMoving();
-  //       }
-  //     }
-  //   } else {
-  //     console.log("No character selected.");
-  //   }
-  // }
+        if (canMove) {
+          // Set the selected character's target grid for movement
+          this.selectedCharacter.setTargetGrids(nextOccupiedGrids);
+          this.selectedCharacter.setIsActing(true);
+        } else {
+          console.log("Movement blocked.");
+          this.selectedCharacter.stopMoving();
+        }
+      }
+    } else {
+      console.log("No character selected.");
+    }
+  }
 
   // Use the transition function with config
   triggerSceneChange() {
     const config: TransitionConfig = {
-      targetScene: "NewScene",
+      targetScene: "ShadowtideHarbourV1",
       duration: 1500,
       fadeColor: 0xff0000,
       callback: () => console.log("Scene transition completed!"),

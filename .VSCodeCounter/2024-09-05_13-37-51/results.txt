@@ -1,0 +1,70 @@
+Date : 2024-09-05 13:37:51
+Directory : c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src
+Total : 30 files,  2459 codes, 468 comments, 543 blanks, all 3470 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| TypeScript |         19 |      1,818 |        372 |        391 |      2,581 |
+| JavaScript |          4 |        287 |         71 |         87 |        445 |
+| PostCSS    |          2 |        264 |         25 |         51 |        340 |
+| HTML       |          2 |         46 |          0 |         13 |         59 |
+| JSON       |          3 |         44 |          0 |          1 |         45 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                               | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                  |         30 |      2,459 |        468 |        543 |      3,470 |
+| . (Files)                                                                                          |          3 |         58 |          1 |         10 |         69 |
+| customStyles                                                                                       |          1 |         29 |          0 |          4 |         33 |
+| game_scripts                                                                                       |         13 |      1,402 |        187 |        230 |      1,819 |
+| game_scripts (Files)                                                                               |          5 |        825 |        127 |        140 |      1,092 |
+| game_scripts\interfaces                                                                            |          1 |         21 |          1 |          2 |         24 |
+| game_scripts\utils                                                                                 |          7 |        556 |         59 |         88 |        703 |
+| inky                                                                                               |          9 |        595 |         96 |        145 |        836 |
+| inky (Files)                                                                                       |          4 |         45 |          0 |          1 |         46 |
+| inky\inky_chapter_1_web                                                                            |          5 |        550 |         96 |        144 |        790 |
+| inky\inky_chapter_1_web\chapter_1                                                                  |          5 |        550 |         96 |        144 |        790 |
+| scenes                                                                                             |          3 |        359 |        173 |        137 |        669 |
+| script-nodes                                                                                       |          1 |         16 |         11 |         17 |         44 |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                           | language   | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\customStyles\sceneTransition.css               | PostCSS    |         29 |          0 |          4 |         33 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\SceneAction.ts                    | TypeScript |         53 |          2 |          7 |         62 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\SceneActionManager.ts             | TypeScript |        271 |         44 |         38 |        353 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\SceneTransition.ts                | TypeScript |         32 |          5 |          6 |         43 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\StoryBox.ts                       | TypeScript |        156 |          6 |         25 |        187 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\character.ts                      | TypeScript |        313 |         70 |         64 |        447 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\interfaces\StoryBoxConfig.ts      | TypeScript |         21 |          1 |          2 |         24 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\CollisionChecker.ts         | TypeScript |         49 |          3 |          6 |         58 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\DesktopControls.ts          | TypeScript |        257 |         16 |         34 |        307 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\DirectionInput.ts           | TypeScript |         29 |          1 |          4 |         34 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\SceneActionData.ts          | TypeScript |          0 |         19 |          2 |         21 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\SceneUtils.ts               | TypeScript |         45 |          0 |          6 |         51 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\grid.ts                     | TypeScript |         79 |          6 |         19 |        104 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\game_scripts\utils\utils.ts                    | TypeScript |         97 |         14 |         17 |        128 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\index.html                                     | HTML       |         17 |          0 |          3 |         20 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\chapter_1.ink.json                        | JSON       |          1 |          0 |          0 |          1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\chapter_1.js                              | JavaScript |          1 |          0 |          0 |          1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inky-test-json.json                       | JSON       |         18 |          0 |          0 |         18 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inky_chapter_1_web\chapter_1\chapter_1.js | JavaScript |          1 |          0 |          0 |          1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inky_chapter_1_web\chapter_1\index.html   | HTML       |         29 |          0 |         10 |         39 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inky_chapter_1_web\chapter_1\ink.js       | JavaScript |          1 |          1 |          1 |          3 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inky_chapter_1_web\chapter_1\main.js      | JavaScript |        284 |         70 |         86 |        440 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inky_chapter_1_web\chapter_1\style.css    | PostCSS    |        235 |         25 |         47 |        307 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\inky\inkytest.json                             | JSON       |         25 |          0 |          1 |         26 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\main.ts                                        | TypeScript |         41 |          0 |          6 |         47 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\scenes\Level.ts                                | TypeScript |         29 |         22 |         26 |         77 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\scenes\MainGameScene.ts                        | TypeScript |        290 |        134 |         82 |        506 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\scenes\Preload.ts                              | TypeScript |         40 |         17 |         29 |         86 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\script-nodes\PreloadBarUpdaterScript.ts        | TypeScript |         16 |         11 |         17 |         44 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src\vite-env.d.ts                                  | TypeScript |          0 |          1 |          1 |          2 |
+| Total                                                                                              |            |      2,459 |        468 |        543 |      3,470 |
++----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

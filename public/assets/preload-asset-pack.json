@@ -120,6 +120,21 @@
                 "key": "Shadows"
             },
             {
+                "url": "assets/Shadowtide_Harbour_V1.png",
+                "type": "image",
+                "key": "Shadowtide_Harbour_V1"
+            },
+            {
+                "url": "assets/shadowtide_harbour_v1_baselayer.tmj",
+                "type": "binary",
+                "key": "shadowtide_harbour_v1_baselayer"
+            },
+            {
+                "url": "assets/shadowtide_harbour_v1_baselayer.json",
+                "type": "tilemapTiledJSON",
+                "key": "shadowtide_harbour_v1_baselayer_1"
+            },
+            {
                 "url": "assets/ShadowtideKeepEntranceMap_test_1.jpg",
                 "type": "image",
                 "key": "ShadowtideKeepEntranceMap_test_1"

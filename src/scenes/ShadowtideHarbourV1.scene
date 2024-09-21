@@ -1,0 +1,48 @@
+{
+    "id": "d59eab14-40ad-45db-924e-7be56ef1e6b1",
+    "sceneType": "SCENE",
+    "settings": {
+        "exportClass": true,
+        "autoImport": true,
+        "displayName": "shadowtide-harbour-v1",
+        "preloadPackFiles": [],
+        "createMethodName": "editorCreate",
+        "sceneKey": "ShadowtideHarbourV1",
+        "compilerOutputLanguage": "TYPE_SCRIPT",
+        "borderWidth": 3840,
+        "borderHeight": 2160
+    },
+    "displayList": [
+        {
+            "type": "TilemapLayer",
+            "id": "50775ac3-5961-4c8b-a5ff-1e4c4e0bcaa8",
+            "label": "Shadowtide Harbour TilemapLayer",
+            "displayName": "shadowtide_harbour_tilemapimage",
+            "tilemapId": "f9bc6841-d731-4d00-992f-536482ee3ef7",
+            "layerName": "Base Map",
+            "tilesets": [
+                "Shadowtide_Harbour_Base_Map"
+            ]
+        }
+    ],
+    "plainObjects": [
+        {
+            "id": "f9bc6841-d731-4d00-992f-536482ee3ef7",
+            "type": "Tilemap",
+            "label": "shadowtide_harbour_v1_baselayer_1",
+            "key": "shadowtide_harbour_v1_baselayer_1",
+            "tilesets": [
+                {
+                    "name": "Shadowtide_Harbour_Base_Map",
+                    "imageKey": "Shadowtide_Harbour_V1"
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "app": "Phaser Editor - Scene Editor",
+        "url": "https://phaser.io/editor",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    }
+}

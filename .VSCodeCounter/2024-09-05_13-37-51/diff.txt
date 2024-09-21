@@ -1,0 +1,80 @@
+Date : 2024-09-05 13:37:51
+Directory : c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\src
+Total : 33 files,  -28852 codes, -5 comments, -179 blanks, all -29036 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript         |          1 |         -5 |         -2 |         -1 |         -8 |
+| Markdown           |          2 |        -21 |          0 |        -14 |        -35 |
+| JSON with Comments |          1 |        -27 |         -2 |          0 |        -29 |
+| PostCSS            |          2 |        -28 |          0 |         -4 |        -32 |
+| HTML               |          2 |        -33 |          0 |         -4 |        -37 |
+| JavaScript         |          4 |        -62 |          0 |         -8 |        -70 |
+| Ink                |          1 |       -208 |         -1 |       -125 |       -334 |
+| XML                |          6 |    -10,364 |          0 |         -6 |    -10,370 |
+| JSON               |         14 |    -18,104 |          0 |        -17 |    -18,121 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                         | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                            |         33 |    -28,852 |         -5 |       -179 |    -29,036 |
+| ..                                                                                           |         33 |    -28,852 |         -5 |       -179 |    -29,036 |
+| .. (Files)                                                                                   |          6 |       -110 |         -2 |        -17 |       -129 |
+| ..\dist                                                                                      |         13 |    -14,133 |          0 |        -17 |    -14,150 |
+| ..\dist (Files)                                                                              |          2 |        -31 |          0 |         -4 |        -35 |
+| ..\dist\assets                                                                               |         11 |    -14,102 |          0 |        -13 |    -14,115 |
+| ..\dist\assets (Files)                                                                       |         10 |    -14,101 |          0 |        -13 |    -14,114 |
+| ..\dist\assets\story_files                                                                   |          1 |         -1 |          0 |          0 |         -1 |
+| ..\inky                                                                                      |          1 |       -208 |         -1 |       -125 |       -334 |
+| ..\public                                                                                    |         10 |    -14,336 |          0 |        -13 |    -14,349 |
+| ..\public (Files)                                                                            |          1 |        -14 |          0 |         -2 |        -16 |
+| ..\public\assets                                                                             |          9 |    -14,322 |          0 |        -11 |    -14,333 |
+| ..\public\assets (Files)                                                                     |          8 |    -14,321 |          0 |        -11 |    -14,332 |
+| ..\public\assets\story_files                                                                 |          1 |         -1 |          0 |          0 |         -1 |
+| ..\types                                                                                     |          1 |         -5 |         -2 |         -1 |         -8 |
+| ..\vite                                                                                      |          2 |        -60 |          0 |         -6 |        -66 |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                     | language           | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\CHANGELOG.md                                 | Markdown           |         -3 |          0 |         -2 |         -5 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\README.md                                    | Markdown           |        -18 |          0 |        -12 |        -30 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\asset-pack.json                  | JSON               |         -1 |          0 |          0 |         -1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\grass_tileset_16.tmx             | XML                |       -180 |          0 |         -1 |       -181 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\grass_town_1_16.json             | JSON               |     -6,449 |          0 |         -6 |     -6,455 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\grass_town_1_16.tmx              | XML                |     -3,599 |          0 |         -1 |     -3,600 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\index-DHyIjCu8.js                | JavaScript         |         -1 |          0 |         -1 |         -2 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\inkytest.json                    | JSON               |        -25 |          0 |         -1 |        -26 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\phaser-CmFXOKba.js               | JavaScript         |         -1 |          0 |         -1 |         -2 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\preload-asset-pack.json          | JSON               |         -1 |          0 |          0 |         -1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\story_files\chapter_1.ink.json   | JSON               |         -1 |          0 |          0 |         -1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\test_castle_1.json               | JSON               |     -2,441 |          0 |         -1 |     -2,442 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\assets\test_castle_1.tmx                | XML                |     -1,403 |          0 |         -1 |     -1,404 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\index.html                              | HTML               |        -17 |          0 |         -2 |        -19 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\dist\style.css                               | PostCSS            |        -14 |          0 |         -2 |        -16 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\index.html                                   | HTML               |        -16 |          0 |         -2 |        -18 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\inky\chapter_1.ink                           | Ink                |       -208 |         -1 |       -125 |       -334 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\package.json                                 | JSON               |        -35 |          0 |         -1 |        -36 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\phasereditor2d.config.json                   | JSON               |        -11 |          0 |          0 |        -11 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\asset-pack.json                | JSON               |        -23 |          0 |          0 |        -23 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\grass_tileset_16.tmx           | XML                |       -180 |          0 |         -1 |       -181 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\grass_town_1_16.json           | JSON               |     -6,449 |          0 |         -6 |     -6,455 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\grass_town_1_16.tmx            | XML                |     -3,599 |          0 |         -1 |     -3,600 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\inkytest.json                  | JSON               |        -25 |          0 |         -1 |        -26 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\preload-asset-pack.json        | JSON               |       -201 |          0 |          0 |       -201 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\story_files\chapter_1.ink.json | JSON               |         -1 |          0 |          0 |         -1 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\test_castle_1.json             | JSON               |     -2,441 |          0 |         -1 |     -2,442 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\assets\test_castle_1.tmx              | XML                |     -1,403 |          0 |         -1 |     -1,404 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\public\style.css                             | PostCSS            |        -14 |          0 |         -2 |        -16 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\tsconfig.json                                | JSON with Comments |        -27 |         -2 |          0 |        -29 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\types\process.env.ts                         | TypeScript         |         -5 |         -2 |         -1 |         -8 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\vite\config.dev.mjs                          | JavaScript         |        -16 |          0 |         -2 |        -18 |
+| c:\Users\gregc\Documents\js_dev\phaser_dev\RPG2\vite\config.prod.mjs                         | JavaScript         |        -44 |          0 |         -4 |        -48 |
+| Total                                                                                        |                    |    -28,852 |         -5 |       -179 |    -29,036 |
++----------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
