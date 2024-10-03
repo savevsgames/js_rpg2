@@ -60,7 +60,7 @@ export default class MainGameScene extends Phaser.Scene {
     );
 
     // shadowtideKeepEntranceMap_test_1
-    this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
+    // this.add.image(1920, 1080, "ShadowtideKeepEntranceMap_test_1");
 
     // tile_Layer
     const tile_Layer = test_castle.createLayer(
